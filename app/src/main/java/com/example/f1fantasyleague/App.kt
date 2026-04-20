@@ -53,7 +53,7 @@ fun App() {
         ) {
             when (currentScreen) {
                 "home" -> ScreenPlaceholder("Home screen")
-                "info" -> ScreenPlaceholder("Info screen")
+                "info" -> ScreenPlaceholder("Informations")
                 "standings" -> ScreenPlaceholder("Standings")
                 "results" -> ScreenPlaceholder("Results")
                 "hotlaps" -> ScreenPlaceholder("Hotlaps")
