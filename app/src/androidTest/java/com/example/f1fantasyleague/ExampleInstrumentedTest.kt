@@ -1,4 +1,4 @@
-package com.example.f1fantasyleage
+package com.example.f1fantasyleague
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

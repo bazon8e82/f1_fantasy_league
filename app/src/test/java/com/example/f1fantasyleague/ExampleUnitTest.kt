@@ -1,4 +1,4 @@
-package com.example.f1fantasyleage
+package com.example.f1fantasyleague
 
 import org.junit.Test
 
