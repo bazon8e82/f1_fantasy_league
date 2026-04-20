@@ -1,4 +1,4 @@
-package com.example.f1fantasyleage.ui.theme
+package com.example.f1fantasyleague.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
