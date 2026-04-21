@@ -17,16 +17,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 
 @Composable
@@ -35,63 +34,58 @@ fun InfoScreenContent() {
     val coroutineScope = rememberCoroutineScope()
 
     val topSections = listOf(
-        "How to vote?" to
-                "Submit your top 3 Qualifying and Race drivers in order that you think they will finish. For fun you can also do a Mystery Guess.",
+        stringResource(R.string.how_to_vote_title) to
+                stringResource(R.string.how_to_vote_desc),
 
-        "When?" to
-                "The voting is open before the Qualifying of the weekend that Race starts.",
+        stringResource(R.string.when_title) to
+                stringResource(R.string.when_desc)
     )
 
     val bottomSections = listOf(
-        "Qualifying Top 3" to
-                "Up to 6 Race Points per Driver available based on how many places you were off with your guess.",
+        stringResource(R.string.qualifying_title) to
+                stringResource(R.string.qualifying_desc),
 
-        "Race Top 3" to
-                "Up to 8 Race Points per Driver available based on how many places you were off with your guess.",
+        stringResource(R.string.race_title) to
+                stringResource(R.string.race_desc),
 
-        "Mystery Guess" to
-                "A different guess each race worth up to 8 Race Points",
+        stringResource(R.string.mystery_title) to
+                stringResource(R.string.mystery_desc),
 
-        "Maximum Race Points per Race Weekend" to
-                "18 + 24 + 8 (Q + R + MG) = 50 Race Points",
+        stringResource(R.string.max_points_title) to
+                stringResource(R.string.max_points_desc),
 
-        "Points Distribution based on Race Points" to
-                "25, 18, 15, 12, 10, 8, 6, 4, 2, 1",
+        stringResource(R.string.points_distribution_title) to
+                stringResource(R.string.points_distribution_desc),
 
-        "Maximum Season Points" to
-                "25 (First Place) * 22 (Races) = 550 Points",
+        stringResource(R.string.season_points_title) to
+                stringResource(R.string.season_points_desc),
 
-        "Grand Prix Wins" to
-                "How many individual Race Weekends a player had the most points in."
+        stringResource(R.string.gp_wins_title) to
+                stringResource(R.string.gp_wins_desc)
     )
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF2A2A2A))
+            .background(MaterialTheme.colorScheme.surface)
             .padding(24.dp)
     ) {
         LazyColumn(
             state = listState,
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(24.dp),
-            verticalArrangement = Arrangement.spacedBy(32.dp)
+            verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             item {
-                Box(
+                Text(
+                    text = stringResource(R.string.rules_title),
+                    color = MaterialTheme.colorScheme.secondary,
+                    style = MaterialTheme.typography.headlineMedium,
+                    textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color(0xFFF5A623)) // žuta
-                        .padding(vertical = 16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "RULES",
-                        color = Color.White,
-                        fontSize = 26.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+                        .padding(vertical = 8.dp)
+                )
             }
 
             items(topSections) { section ->
@@ -101,9 +95,8 @@ fun InfoScreenContent() {
                 ) {
                     Text(
                         text = section.first,
-                        color = Color.White,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.titleLarge,
                         textAlign = TextAlign.Center
                     )
 
@@ -111,21 +104,18 @@ fun InfoScreenContent() {
 
                     Text(
                         text = section.second,
-                        color = Color.White,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        textAlign = TextAlign.Center,
-                        lineHeight = 26.sp
+                        color = MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.bodyLarge,
+                        textAlign = TextAlign.Center
                     )
                 }
             }
 
             item {
                 Text(
-                    text = "Scoring system",
-                    color = Color(0xFFF5A623),
-                    fontSize = 26.sp,
-                    fontWeight = FontWeight.Bold,
+                    text = stringResource(R.string.scoring_title),
+                    color = MaterialTheme.colorScheme.secondary,
+                    style = MaterialTheme.typography.headlineMedium,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -140,9 +130,8 @@ fun InfoScreenContent() {
                 ) {
                     Text(
                         text = section.first,
-                        color = Color.White,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.titleLarge,
                         textAlign = TextAlign.Center
                     )
 
@@ -150,11 +139,9 @@ fun InfoScreenContent() {
 
                     Text(
                         text = section.second,
-                        color = Color.White,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        textAlign = TextAlign.Center,
-                        lineHeight = 26.sp
+                        color = MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.bodyLarge,
+                        textAlign = TextAlign.Center
                     )
                 }
             }
@@ -166,15 +153,15 @@ fun InfoScreenContent() {
                     listState.animateScrollToItem(0)
                 }
             },
-            containerColor = Color.Red,
+            containerColor = MaterialTheme.colorScheme.primary,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp)
         ) {
             Icon(
                 imageVector = Icons.Default.KeyboardArrowUp,
-                contentDescription = "Scroll to top",
-                tint = Color.White
+                contentDescription = stringResource(R.string.scroll_top_desc),
+                tint = MaterialTheme.colorScheme.onPrimary
             )
         }
     }
