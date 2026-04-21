@@ -53,11 +53,16 @@ fun App(
         Box(
             modifier = Modifier
                 .fillMaxSize()
+<<<<<<< HEAD:app/src/main/java/com/example/f1fantasyleague/ui/home/App.kt
                 .background(MaterialTheme.colorScheme.background)
                 .padding(24.dp)
+=======
+                .background(Color(0xFF1E1E1E))
+                .padding(if (currentScreen == "home") 0.dp else 24.dp)
+>>>>>>> 3c9c917 (First three cards):app/src/main/java/com/example/f1fantasyleague/App.kt
         ) {
             when (currentScreen) {
-                "home" -> ScreenPlaceholder("Home screen")
+                "home" -> HomeScreen()
                 "info" -> InfoScreenContent()
                 "standings" -> ScreenPlaceholder("Standings")
                 "results" -> ScreenPlaceholder("Results")
