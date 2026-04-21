@@ -1,3 +1,45 @@
 <resources>
-    <string name="app_name">F1 fantasy leage</string>
+    <string name="app_name">Fantasy League 26</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_info">Info</string>
+    <string name="menu_standings">Standings</string>
+    <string name="menu_results">Results</string>
+    <string name="menu_hotlaps">Hotlaps</string>
+
+    <string name="screen_home">Home screen</string>
+
+    <string name="rules_title">Rules:</string>
+    <string name="scoring_title">Scoring system:</string>
+
+    <string name="how_to_vote_title">How to vote?</string>
+    <string name="how_to_vote_desc">Submit your top 3 Qualifying and Race drivers in order that you think they will finish. For fun you can also do a Mystery Guess.</string>
+
+    <string name="when_title">When?</string>
+    <string name="when_desc">The voting is open before the Qualifying of the weekend that Race starts.</string>
+
+    <string name="qualifying_title">Qualifying Top 3</string>
+    <string name="qualifying_desc">Up to 6 Race Points per Driver available based on how many places you were off with your guess.</string>
+
+    <string name="race_title">Race Top 3</string>
+    <string name="race_desc">Up to 8 Race Points per Driver available based on how many places you were off with your guess.</string>
+
+    <string name="mystery_title">Mystery Guess</string>
+    <string name="mystery_desc">A different guess each race worth up to 8 Race Points</string>
+
+    <string name="max_points_title">Maximum Race Points per Race Weekend</string>
+    <string name="max_points_desc">18 + 24 + 8 (Q + R + MG) = 50 Race Points</string>
+
+    <string name="points_distribution_title">Points Distribution based on Race Points</string>
+    <string name="points_distribution_desc">25, 18, 15, 12, 10, 8, 6, 4, 2, 1</string>
+
+    <string name="season_points_title">Maximum Season Points</string>
+    <string name="season_points_desc">25 (First Place) * 22 (Races) = 550 Points</string>
+
+    <string name="gp_wins_title">Grand Prix Wins</string>
+    <string name="gp_wins_desc">How many individual Race Weekends a player had the most points in.</string>
+
+    <string name="menu_icon_desc">Menu</string>
+    <string name="scroll_top_desc">Scroll to top</string>
+    <string name="lock_icon_desc">Lock</string>
 </resources>
