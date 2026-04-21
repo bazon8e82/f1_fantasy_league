@@ -23,7 +23,7 @@ fun App() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF191925))
+            .background(Color(0xFF1E1E1E))
     ) {
         TopBar(
             onMenuClick = {
@@ -48,12 +48,12 @@ fun App() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFF191925))
+                .background(Color(0xFF1E1E1E))
                 .padding(24.dp)
         ) {
             when (currentScreen) {
                 "home" -> ScreenPlaceholder("Home screen")
-                "info" -> ScreenPlaceholder("Informations")
+                "info" -> InfoScreenContent()
                 "standings" -> ScreenPlaceholder("Standings")
                 "results" -> ScreenPlaceholder("Results")
                 "hotlaps" -> ScreenPlaceholder("Hotlaps")
