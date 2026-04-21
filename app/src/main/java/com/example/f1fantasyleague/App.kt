@@ -49,10 +49,10 @@ fun App() {
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color(0xFF1E1E1E))
-                .padding(24.dp)
+                .padding(if (currentScreen == "home") 0.dp else 24.dp)
         ) {
             when (currentScreen) {
-                "home" -> ScreenPlaceholder("Home screen")
+                "home" -> HomeScreen()
                 "info" -> InfoScreenContent()
                 "standings" -> ScreenPlaceholder("Standings")
                 "results" -> ScreenPlaceholder("Results")
