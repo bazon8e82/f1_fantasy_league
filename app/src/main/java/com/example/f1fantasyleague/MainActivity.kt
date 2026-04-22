@@ -11,7 +11,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            F1FantasyLeageTheme {
+            F1FantasyLeageTheme{
                 App()
             }
         }

@@ -1,56 +1,92 @@
 package com.example.f1fantasyleague.ui.theme
 
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.staticCompositionLocalOf
+
+@Immutable
+data class F1Colors(
+    val backgroundPrimary: androidx.compose.ui.graphics.Color,
+    val surfacePrimary: androidx.compose.ui.graphics.Color,
+    val surfaceSecondary: androidx.compose.ui.graphics.Color,
+    val borderSubtle: androidx.compose.ui.graphics.Color,
+    val brandPrimary: androidx.compose.ui.graphics.Color,
+    val textPrimary: androidx.compose.ui.graphics.Color,
+    val textSecondary: androidx.compose.ui.graphics.Color
+)
+
+private val DarkF1Colors = F1Colors(
+    backgroundPrimary = BackgroundPrimary,
+    surfacePrimary = SurfacePrimary,
+    surfaceSecondary = SurfaceSecondary,
+    borderSubtle = BorderSubtle,
+    brandPrimary = BrandPrimary,
+    textPrimary = TextPrimary,
+    textSecondary = TextSecondary
+)
+
+private val LightF1Colors = F1Colors(
+    backgroundPrimary = BackgroundPrimary,
+    surfacePrimary = SurfacePrimary,
+    surfaceSecondary = SurfaceSecondary,
+    borderSubtle = BorderSubtle,
+    brandPrimary = BrandPrimary,
+    textPrimary = TextPrimary,
+    textSecondary = TextSecondary
+)
+
+private val LocalF1Colors = staticCompositionLocalOf { DarkF1Colors }
+
+object F1Theme {
+    val colors: F1Colors
+        @Composable get() = LocalF1Colors.current
+}
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = BrandPrimary,
+    onPrimary = TextPrimary,
+    background = BackgroundPrimary,
+    onBackground = TextPrimary,
+    surface = SurfacePrimary,
+    onSurface = TextPrimary,
+    surfaceVariant = SurfaceSecondary,
+    onSurfaceVariant = TextSecondary,
+    outline = BorderSubtle,
+    tertiary = TextSecondary
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    primary = BrandPrimary,
+    onPrimary = TextPrimary,
+    background = BackgroundPrimary,
+    onBackground = TextPrimary,
+    surface = SurfacePrimary,
+    onSurface = TextPrimary,
+    surfaceVariant = SurfaceSecondary,
+    onSurfaceVariant = TextSecondary,
+    outline = BorderSubtle,
+    tertiary = TextSecondary
 )
 
 @Composable
 fun F1FantasyLeageTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    _dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-      dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-        val context = LocalContext.current
-        if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-      }
-      darkTheme -> DarkColorScheme
-      else -> LightColorScheme
-    }
+    val appColors = if (darkTheme) DarkF1Colors else LightF1Colors
+    val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
 
-    MaterialTheme(
-      colorScheme = colorScheme,
-      typography = Typography,
-      content = content
-    )
+    CompositionLocalProvider(LocalF1Colors provides appColors) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = Typography,
+            content = content
+        )
+    }
 }
