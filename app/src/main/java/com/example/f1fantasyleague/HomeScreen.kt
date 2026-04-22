@@ -36,25 +36,29 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.f1fantasyleague.ui.theme.F1Theme
 
+
+val cardShape = RoundedCornerShape(30.dp)
+val tableCellStartPadding = 12.dp
+val tableDividerWidth = 0.8.dp
+
 @Composable
 fun HomeScreen() {
-    val cardShape = RoundedCornerShape(30.dp)
     var passcode by remember { mutableStateOf("") }
-    val tableCellStartPadding = 12.dp
-    val tableDividerWidth = 0.8.dp
-    val standingsColNumberWidth = 56.dp
-    val standingsColNameWidth = 120.dp
-    val standingsColWinsWidth = 88.dp
-    val standingsColPointsWidth = 100.dp
     val standingsRows = listOf(
         listOf("1", "Pav", "0", "65"),
         listOf("2", "Dud", "0", "39"),
         listOf("3", "Sro", "0", "36"),
         listOf("4", "Bur", "0", "33")
+    )
+
+    val guessesRows = listOf(
+        listOf("Luka P.", "RUS/ANT/PIA", "ANT/RUS/PIA", "-"),
+        listOf("Matej D.", "RUS/ANT/PIA", "ANT/RUS/PIA", "-"),
+        listOf("Marin S.", "RUS/ANT/PIA", "ANT/RUS/PIA", "25"),
+        listOf("Bruno B", "RUS/ANT/PIA", "ANT/RUS/PIA", "-")
     )
 
     Box(
@@ -314,211 +318,240 @@ fun HomeScreen() {
                 }
             }
 
-            Card(
+            TableCard(
+                title = "Standings",
+                col1_title = "#",
+                col2_title = "Name",
+                col3_title = "Wins",
+                col4_title = "Points",
+                rows = standingsRows
+            )
+
+            TableCard(
+                title = "Guesses",
+                col1_title = "Name",
+                col2_title = "Qualifying",
+                col3_title = "Race",
+                col4_title = "Mystery",
+                rows = guessesRows
+            )
+        }
+    }
+}
+
+//width of column is set to 160.dp this needs to be edited when connected to backend
+@Composable
+fun TableCard(
+    title: String,
+    col1_title: String,
+    col2_title: String,
+    col3_title: String,
+    col4_title: String,
+    rows: List<List<String>>
+) {
+    Card(
+        modifier = Modifier
+            .padding(horizontal = 20.dp)
+            .fillMaxWidth(),
+        shape = cardShape,
+        colors = CardDefaults.cardColors(containerColor = F1Theme.colors.surfacePrimary),
+        border = BorderStroke(0.8.dp, F1Theme.colors.borderSubtle),
+        elevation = CardDefaults.cardElevation(defaultElevation = 14.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(90.dp)
+                .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
+                .background(F1Theme.colors.brandPrimary),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = title,
+                modifier = Modifier.padding(horizontal = 24.dp),
+                color = F1Theme.colors.textPrimary,
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+        Column(
+            modifier = Modifier.padding(horizontal = 24.dp, vertical = 24.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Column(
                 modifier = Modifier
-                    .padding(horizontal = 20.dp)
-                    .fillMaxWidth(),
-                shape = cardShape,
-                colors = CardDefaults.cardColors(containerColor = F1Theme.colors.surfacePrimary),
-                border = BorderStroke(0.8.dp, F1Theme.colors.borderSubtle),
-                elevation = CardDefaults.cardElevation(defaultElevation = 14.dp)
+                    .fillMaxWidth()
+                    .horizontalScroll(rememberScrollState())
             ) {
-                Box(
+                Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(90.dp)
-                        .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
-                        .background(F1Theme.colors.brandPrimary),
-                    contentAlignment = Alignment.Center
+                        .width(IntrinsicSize.Min)
+                        .height(IntrinsicSize.Min)
+                        .background(F1Theme.colors.surfaceSecondary)
+                        .border(BorderStroke(0.8.dp, F1Theme.colors.borderSubtle))
                 ) {
                     Text(
-                        text = "Standings",
-                        modifier = Modifier.padding(horizontal = 24.dp),
+                        text = col1_title,
+                        modifier = Modifier
+                            .width(160.dp)
+                            .padding(
+                                start = tableCellStartPadding,
+                                top = 10.dp,
+                                bottom = 10.dp
+                            ),
                         color = F1Theme.colors.textPrimary,
-                        style = MaterialTheme.typography.headlineMedium,
+                        style = MaterialTheme.typography.headlineSmall,
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .padding(vertical = 2.dp)
+                            .width(tableDividerWidth)
+                            .background(F1Theme.colors.borderSubtle)
+                    )
+                    Text(
+                        text = col2_title,
+                        modifier = Modifier
+                            .width(160.dp)
+                            .padding(
+                                start = tableCellStartPadding,
+                                top = 10.dp,
+                                bottom = 10.dp
+                            ),
+                        color = F1Theme.colors.textPrimary,
+                        style = MaterialTheme.typography.headlineSmall,
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .padding(vertical = 2.dp)
+                            .width(tableDividerWidth)
+                            .background(F1Theme.colors.borderSubtle)
+                    )
+                    Text(
+                        text = col3_title,
+                        modifier = Modifier
+                            .width(160.dp)
+                            .padding(
+                                start = tableCellStartPadding,
+                                top = 10.dp,
+                                bottom = 10.dp
+                            ),
+                        color = F1Theme.colors.textPrimary,
+                        style = MaterialTheme.typography.headlineSmall,
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .padding(vertical = 2.dp)
+                            .width(tableDividerWidth)
+                            .background(F1Theme.colors.borderSubtle)
+                    )
+                    Text(
+                        text = col4_title,
+                        modifier = Modifier
+                            .width(160.dp)
+                            .padding(
+                                start = tableCellStartPadding,
+                                top = 10.dp,
+                                bottom = 10.dp
+                            ),
+                        color = F1Theme.colors.textPrimary,
+                        style = MaterialTheme.typography.headlineSmall,
+                        textAlign = TextAlign.Center,
                         fontWeight = FontWeight.Bold
                     )
                 }
 
-                Column(
-                    modifier = Modifier.padding(horizontal = 24.dp, vertical = 24.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Column(
+                for (row in rows) {
+                    Row(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .horizontalScroll(rememberScrollState())
+                            .width(IntrinsicSize.Min)
+                            .height(IntrinsicSize.Min)
+                            .background(F1Theme.colors.surfaceSecondary)
+                            .border(BorderStroke(0.8.dp, F1Theme.colors.borderSubtle))
                     ) {
-                        Row(
+                        Text(
+                            text = row[0],
                             modifier = Modifier
-                                .width(IntrinsicSize.Min)
-                                .height(IntrinsicSize.Min)
-                                .background(F1Theme.colors.surfaceSecondary)
-                                .border(BorderStroke(0.8.dp, F1Theme.colors.borderSubtle))
-                        ) {
-                            Text(
-                                text = "#",
-                                modifier = Modifier
-                                    .width(standingsColNumberWidth)
-                                    .padding(
-                                        start = tableCellStartPadding,
-                                        top = 10.dp,
-                                        bottom = 10.dp
-                                    ),
-                                color = F1Theme.colors.textPrimary,
-                                style = MaterialTheme.typography.headlineSmall,
-                                textAlign = TextAlign.Center,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .padding(vertical = 2.dp)
-                                    .width(tableDividerWidth)
-                                    .background(F1Theme.colors.borderSubtle)
-                            )
-                            Text(
-                                text = "Name",
-                                modifier = Modifier
-                                    .width(standingsColNameWidth)
-                                    .padding(
-                                        start = tableCellStartPadding,
-                                        top = 10.dp,
-                                        bottom = 10.dp
-                                    ),
-                                color = F1Theme.colors.textPrimary,
-                                style = MaterialTheme.typography.headlineSmall,
-                                textAlign = TextAlign.Center,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .padding(vertical = 2.dp)
-                                    .width(tableDividerWidth)
-                                    .background(F1Theme.colors.borderSubtle)
-                            )
-                            Text(
-                                text = "Wins",
-                                modifier = Modifier
-                                    .width(standingsColWinsWidth)
-                                    .padding(
-                                        start = tableCellStartPadding,
-                                        top = 10.dp,
-                                        bottom = 10.dp
-                                    ),
-                                color = F1Theme.colors.textPrimary,
-                                style = MaterialTheme.typography.headlineSmall,
-                                textAlign = TextAlign.Center,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .padding(vertical = 2.dp)
-                                    .width(tableDividerWidth)
-                                    .background(F1Theme.colors.borderSubtle)
-                            )
-                            Text(
-                                text = "Points",
-                                modifier = Modifier
-                                    .width(standingsColPointsWidth)
-                                    .padding(
-                                        start = tableCellStartPadding,
-                                        top = 10.dp,
-                                        bottom = 10.dp
-                                    ),
-                                color = F1Theme.colors.textPrimary,
-                                style = MaterialTheme.typography.headlineSmall,
-                                textAlign = TextAlign.Center,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-
-                        for (row in standingsRows) {
-                            Row(
-                                modifier = Modifier
-                                    .width(IntrinsicSize.Min)
-                                    .height(IntrinsicSize.Min)
-                                    .background(F1Theme.colors.surfaceSecondary)
-                                    .border(BorderStroke(0.8.dp, F1Theme.colors.borderSubtle))
-                            ) {
-                                Text(
-                                    text = row[0],
-                                    modifier = Modifier
-                                        .width(standingsColNumberWidth)
-                                        .padding(
-                                            start = tableCellStartPadding,
-                                            top = 10.dp,
-                                            bottom = 10.dp
-                                        ),
-                                    color = F1Theme.colors.textSecondary,
-                                    style = MaterialTheme.typography.headlineSmall,
-                                    textAlign = TextAlign.Center
-                                )
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxHeight()
-                                        .padding(vertical = 2.dp)
-                                        .width(tableDividerWidth)
-                                        .background(F1Theme.colors.borderSubtle)
-                                )
-                                Text(
-                                    text = row[1],
-                                    modifier = Modifier
-                                        .width(standingsColNameWidth)
-                                        .padding(
-                                            start = tableCellStartPadding,
-                                            top = 10.dp,
-                                            bottom = 10.dp
-                                        ),
-                                    color = F1Theme.colors.textSecondary,
-                                    style = MaterialTheme.typography.headlineSmall,
-                                    textAlign = TextAlign.Center
-                                )
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxHeight()
-                                        .padding(vertical = 2.dp)
-                                        .width(tableDividerWidth)
-                                        .background(F1Theme.colors.borderSubtle)
-                                )
-                                Text(
-                                    text = row[2],
-                                    modifier = Modifier
-                                        .width(standingsColWinsWidth)
-                                        .padding(
-                                            start = tableCellStartPadding,
-                                            top = 10.dp,
-                                            bottom = 10.dp
-                                        ),
-                                    color = F1Theme.colors.textSecondary,
-                                    style = MaterialTheme.typography.headlineSmall,
-                                    textAlign = TextAlign.Center
-                                )
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxHeight()
-                                        .padding(vertical = 2.dp)
-                                        .width(tableDividerWidth)
-                                        .background(F1Theme.colors.borderSubtle)
-                                )
-                                Text(
-                                    text = row[3],
-                                    modifier = Modifier
-                                        .width(standingsColPointsWidth)
-                                        .padding(
-                                            start = tableCellStartPadding,
-                                            top = 10.dp,
-                                            bottom = 10.dp
-                                        ),
-                                    color = F1Theme.colors.textSecondary,
-                                    style = MaterialTheme.typography.headlineSmall,
-                                    textAlign = TextAlign.Center
-                                )
-                            }
-                        }
+                                .width(160.dp)
+                                .padding(
+                                    start = tableCellStartPadding,
+                                    top = 10.dp,
+                                    bottom = 10.dp
+                                ),
+                            color = F1Theme.colors.textSecondary,
+                            style = MaterialTheme.typography.headlineSmall,
+                            textAlign = TextAlign.Center
+                        )
+                        Box(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .padding(vertical = 2.dp)
+                                .width(tableDividerWidth)
+                                .background(F1Theme.colors.borderSubtle)
+                        )
+                        Text(
+                            text = row[1],
+                            modifier = Modifier
+                                .width(160.dp)
+                                .padding(
+                                    start = tableCellStartPadding,
+                                    top = 10.dp,
+                                    bottom = 10.dp
+                                ),
+                            color = F1Theme.colors.textSecondary,
+                            style = MaterialTheme.typography.headlineSmall,
+                            textAlign = TextAlign.Center
+                        )
+                        Box(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .padding(vertical = 2.dp)
+                                .width(tableDividerWidth)
+                                .background(F1Theme.colors.borderSubtle)
+                        )
+                        Text(
+                            text = row[2],
+                            modifier = Modifier
+                                .width(160.dp)
+                                .padding(
+                                    start = tableCellStartPadding,
+                                    top = 10.dp,
+                                    bottom = 10.dp
+                                ),
+                            color = F1Theme.colors.textSecondary,
+                            style = MaterialTheme.typography.headlineSmall,
+                            textAlign = TextAlign.Center
+                        )
+                        Box(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .padding(vertical = 2.dp)
+                                .width(tableDividerWidth)
+                                .background(F1Theme.colors.borderSubtle)
+                        )
+                        Text(
+                            text = row[3],
+                            modifier = Modifier
+                                .width(160.dp)
+                                .padding(
+                                    start = tableCellStartPadding,
+                                    top = 10.dp,
+                                    bottom = 10.dp
+                                ),
+                            color = F1Theme.colors.textSecondary,
+                            style = MaterialTheme.typography.headlineSmall,
+                            textAlign = TextAlign.Center
+                        )
                     }
                 }
             }
@@ -526,8 +559,9 @@ fun HomeScreen() {
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF161616)
+
+/*@Preview(showBackground = true, backgroundColor = 0xFF161616)
 @Composable
 private fun HomeScreenPreview() {
     HomeScreen()
-}
+}*/
