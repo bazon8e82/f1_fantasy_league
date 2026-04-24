@@ -12,7 +12,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.f1fantasyleage"
+        applicationId = "com.example.f1fantasyleague"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
