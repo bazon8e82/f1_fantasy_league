@@ -19,7 +19,8 @@ import androidx.compose.material3.IconButton
 
 @Composable
 fun LoginScreen(
-    onLoginClick: () -> Unit
+    onSignInClick: (String, String) -> Unit,
+    onSignUpClick: (String, String, String) -> Unit
 ) {
     var isSignUpMode by remember { mutableStateOf(false) }
 
@@ -69,7 +70,7 @@ fun LoginScreen(
 
             LoginTextField(
                 value = email,
-                onValueChange = { email = it },
+                onValueChange = { email = it.trim() },
                 label = "Email"
             )
 
@@ -96,7 +97,15 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(28.dp))
 
             Button(
-                onClick = onLoginClick,
+                onClick = {
+                    if (isSignUpMode) {
+                        if (password == confirmPassword) {
+                            onSignUpClick(name.trim(), email.trim(), password)
+                        }
+                    } else {
+                        onSignInClick(email.trim(), password)
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp),

@@ -15,7 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.example.f1fantasyleague.ui.theme.PrimaryRed
 import com.example.f1fantasyleague.ui.theme.TextMuted
 import com.example.f1fantasyleague.ui.theme.TextPrimary
 import com.example.f1fantasyleague.ui.theme.TextSelected
@@ -23,7 +23,8 @@ import com.example.f1fantasyleague.ui.theme.TextSelected
 @Composable
 fun DropDownMenu(
     currentScreen: String,
-    onItemClick: (String) -> Unit
+    onItemClick: (String) -> Unit,
+    onLogoutClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -36,6 +37,7 @@ fun DropDownMenu(
             isSelected = currentScreen == "home",
             onClick = { onItemClick("home") }
         )
+
         Spacer(modifier = Modifier.height(26.dp))
 
         MenuItem(
@@ -43,6 +45,7 @@ fun DropDownMenu(
             isSelected = currentScreen == "info",
             onClick = { onItemClick("info") }
         )
+
         Spacer(modifier = Modifier.height(26.dp))
 
         MenuItem(
@@ -50,6 +53,7 @@ fun DropDownMenu(
             isSelected = currentScreen == "standings",
             onClick = { onItemClick("standings") }
         )
+
         Spacer(modifier = Modifier.height(26.dp))
 
         MenuItem(
@@ -57,6 +61,7 @@ fun DropDownMenu(
             isSelected = currentScreen == "results",
             onClick = { onItemClick("results") }
         )
+
         Spacer(modifier = Modifier.height(26.dp))
 
         MenuItem(
@@ -65,6 +70,17 @@ fun DropDownMenu(
             onClick = { onItemClick("hotlaps") }
         )
 
+        Spacer(modifier = Modifier.height(26.dp))
+
+        Text(
+            text = "Logout",
+            color = TextPrimary,
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.clickable {
+                onLogoutClick()
+            }
+        )
+/*
         Spacer(modifier = Modifier.height(12.dp))
 
         Icon(
@@ -72,6 +88,7 @@ fun DropDownMenu(
             contentDescription = "Lock",
             tint = TextMuted
         )
+*/
     }
 }
 
