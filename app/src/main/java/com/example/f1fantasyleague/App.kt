@@ -48,11 +48,11 @@ fun App() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-                .padding(24.dp)
+                .background(Color(0xFF1E1E1E))
+                .padding(if (currentScreen == "home") 0.dp else 24.dp)
         ) {
             when (currentScreen) {
-                "home" -> ScreenPlaceholder("Home screen")
+                "home" -> HomeScreen()
                 "info" -> InfoScreenContent()
                 "standings" -> ScreenPlaceholder("Standings")
                 "results" -> ScreenPlaceholder("Results")
