@@ -9,7 +9,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            F1FantasyLeageTheme{
+            F1FantasyLeagueTheme{
                 App()
             }
         }

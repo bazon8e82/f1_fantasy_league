@@ -74,7 +74,7 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun F1FantasyLeageTheme(
+fun F1FantasyLeagueTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     _dynamicColor: Boolean = false,
     content: @Composable () -> Unit
