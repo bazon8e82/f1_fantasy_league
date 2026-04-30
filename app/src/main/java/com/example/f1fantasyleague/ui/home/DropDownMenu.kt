@@ -11,11 +11,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import com.example.f1fantasyleague.ui.theme.TextPrimary
-import com.example.f1fantasyleague.ui.theme.TextSelected
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.example.f1fantasyleague.R
+import com.example.f1fantasyleague.ui.theme.TextPrimary
+import com.example.f1fantasyleague.ui.theme.TextSecondary
 
 @Composable
 fun DropDownMenu(
@@ -83,7 +83,7 @@ fun DropDownMenu(
         Icon(
             imageVector = Icons.Filled.Lock,
             contentDescription = "Lock",
-            tint = TextMuted
+            tint = TextSecondary
         )
 */
     }
@@ -97,7 +97,7 @@ fun MenuItem(
 ) {
     Text(
         text = title,
-        color = if (isSelected) TextSelected else TextPrimary,
+        color = if (isSelected) TextSecondary else TextPrimary,
         style = MaterialTheme.typography.titleMedium,
         modifier = Modifier.clickable { onClick() }
     )
