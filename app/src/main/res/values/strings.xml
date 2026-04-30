@@ -1,11 +1,33 @@
 <resources>
     <string name="app_name">Fantasy League 26</string>
 
+    <string name="login_create_account">Create Account</string>
+    <string name="login_welcome">Welcome</string>
+    <string name="login_signup_subtitle">Sign up to start playing</string>
+    <string name="login_signin_subtitle">Sign in to continue</string>
+    <string name="login_name">Name</string>
+    <string name="login_email">Email</string>
+    <string name="login_password">Password</string>
+    <string name="login_confirm_password">Confirm password</string>
+    <string name="login_sign_up">Sign Up</string>
+    <string name="login_sign_in">Sign In</string>
+    <string name="login_already_have_account">Already have an account? </string>
+    <string name="login_dont_have_account">Don\'t have an account? </string>
+    <string name="toggle_password_desc">Toggle password</string>
+
+    <string name="msg_sign_in_success">Signed in successfully</string>
+    <string name="msg_account_created">Account created</string>
+    <string name="msg_enter_credentials">Enter email and password</string>
+    <string name="msg_fill_fields">Fill in all fields</string>
+    <string name="msg_password_mismatch">Passwords do not match</string>
+    <string name="msg_login_error">Something went wrong. Please try again.</string>
+
     <string name="menu_home">Home</string>
     <string name="menu_info">Info</string>
     <string name="menu_standings">Standings</string>
     <string name="menu_results">Results</string>
     <string name="menu_hotlaps">Hotlaps</string>
+    <string name="menu_logout">Logout</string>
 
     <string name="screen_home">Home screen</string>
 

@@ -1,4 +1,4 @@
-package com.example.f1fantasyleague
+package com.example.f1fantasyleague.ui.home
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically

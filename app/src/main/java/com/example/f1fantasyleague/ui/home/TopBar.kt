@@ -1,4 +1,4 @@
-package com.example.f1fantasyleague
+package com.example.f1fantasyleague.ui.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.f1fantasyleague.R
 import com.example.f1fantasyleague.ui.theme.IconMuted
 import com.example.f1fantasyleague.ui.theme.TextPrimary
 

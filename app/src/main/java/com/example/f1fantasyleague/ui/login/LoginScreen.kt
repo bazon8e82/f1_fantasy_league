@@ -1,34 +1,35 @@
-package com.example.f1fantasyleague
+package com.example.f1fantasyleague.ui.login
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.f1fantasyleague.ui.theme.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.runtime.saveable.rememberSaveable
+import com.example.f1fantasyleague.R
 
 @Composable
 fun LoginScreen(
-    onSignInClick: (String, String) -> Unit,
-    onSignUpClick: (String, String, String) -> Unit
+    uiState: LoginUiState,
+    onNameChange: (String) -> Unit,
+    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onConfirmPasswordChange: (String) -> Unit,
+    onToggleSignUpMode: () -> Unit,
+    onSignInClick: () -> Unit,
+    onSignUpClick: () -> Unit
 ) {
-    var isSignUpMode by remember { mutableStateOf(false) }
-
-    var name by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -40,9 +41,11 @@ fun LoginScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             Text(
-                text = if (isSignUpMode) "Create Account" else "Welcome",
+                text = if (uiState.isSignUpMode)
+                    stringResource(R.string.login_create_account)
+                else
+                    stringResource(R.string.login_welcome),
                 color = TextPrimary,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
@@ -51,45 +54,48 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = if (isSignUpMode) "Sign up to start playing" else "Sign in to continue",
+                text = if (uiState.isSignUpMode)
+                    stringResource(R.string.login_signup_subtitle)
+                else
+                    stringResource(R.string.login_signin_subtitle),
                 color = TextMuted,
                 style = MaterialTheme.typography.titleMedium
             )
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            if (isSignUpMode) {
+            if (uiState.isSignUpMode) {
                 LoginTextField(
-                    value = name,
-                    onValueChange = { name = it },
-                    label = "Name"
+                    value = uiState.name,
+                    onValueChange = onNameChange,
+                    label = stringResource(R.string.login_name)
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
             LoginTextField(
-                value = email,
-                onValueChange = { email = it.trim() },
-                label = "Email"
+                value = uiState.email,
+                onValueChange = onEmailChange,
+                label = stringResource(R.string.login_email)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             LoginTextField(
-                value = password,
-                onValueChange = { password = it },
-                label = "Password",
+                value = uiState.password,
+                onValueChange = onPasswordChange,
+                label = stringResource(R.string.login_password),
                 isPassword = true
             )
 
-            if (isSignUpMode) {
+            if (uiState.isSignUpMode) {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 LoginTextField(
-                    value = confirmPassword,
-                    onValueChange = { confirmPassword = it },
-                    label = "Confirm password",
+                    value = uiState.confirmPassword,
+                    onValueChange = onConfirmPasswordChange,
+                    label = stringResource(R.string.login_confirm_password),
                     isPassword = true
                 )
             }
@@ -98,14 +104,13 @@ fun LoginScreen(
 
             Button(
                 onClick = {
-                    if (isSignUpMode) {
-                        if (password == confirmPassword) {
-                            onSignUpClick(name.trim(), email.trim(), password)
-                        }
+                    if (uiState.isSignUpMode) {
+                        onSignUpClick()
                     } else {
-                        onSignInClick(email.trim(), password)
+                        onSignInClick()
                     }
                 },
+                enabled = !uiState.isLoading,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp),
@@ -114,23 +119,34 @@ fun LoginScreen(
                     contentColor = TextPrimary
                 )
             ) {
-                Text(if (isSignUpMode) "Sign Up" else "Sign In")
+                Text(
+                    text = if (uiState.isSignUpMode)
+                        stringResource(R.string.login_sign_up)
+                    else
+                        stringResource(R.string.login_sign_in)
+                )
             }
 
             Spacer(modifier = Modifier.height(20.dp))
 
             Row {
                 Text(
-                    text = if (isSignUpMode) "Already have an account? " else "Don't have an account? ",
+                    text = if (uiState.isSignUpMode)
+                        stringResource(R.string.login_already_have_account)
+                    else
+                        stringResource(R.string.login_dont_have_account),
                     color = TextMuted
                 )
 
                 Text(
-                    text = if (isSignUpMode) "Sign In" else "Sign Up",
+                    text = if (uiState.isSignUpMode)
+                        stringResource(R.string.login_sign_in)
+                    else
+                        stringResource(R.string.login_sign_up),
                     color = PrimaryRed,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.clickable {
-                        isSignUpMode = !isSignUpMode
+                        onToggleSignUpMode()
                     }
                 )
             }
@@ -145,7 +161,7 @@ fun LoginTextField(
     label: String,
     isPassword: Boolean = false
 ) {
-    var passwordVisible by remember { mutableStateOf(false) }
+    var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
     OutlinedTextField(
         value = value,
@@ -155,7 +171,7 @@ fun LoginTextField(
         visualTransformation = if (isPassword && !passwordVisible)
             PasswordVisualTransformation()
         else
-            androidx.compose.ui.text.input.VisualTransformation.None,
+            VisualTransformation.None,
         trailingIcon = {
             if (isPassword) {
                 val icon = if (passwordVisible)
@@ -166,7 +182,7 @@ fun LoginTextField(
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
                     Icon(
                         imageVector = icon,
-                        contentDescription = "Toggle password",
+                        contentDescription = stringResource(R.string.toggle_password_desc),
                         tint = IconMuted
                     )
                 }
