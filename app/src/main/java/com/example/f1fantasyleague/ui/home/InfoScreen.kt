@@ -1,4 +1,4 @@
-package com.example.f1fantasyleague
+package com.example.f1fantasyleague.ui.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.f1fantasyleague.R
 import kotlinx.coroutines.launch
 
 @Composable

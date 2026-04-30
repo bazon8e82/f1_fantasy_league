@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "95226701760",
+    "firebase_url": "https://f1-fantasy-league-e8bd5-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "f1-fantasy-league-e8bd5",
+    "storage_bucket": "f1-fantasy-league-e8bd5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:95226701760:android:732f1209b013f284d1ca25",
+        "android_client_info": {
+          "package_name": "com.example.f1fantasyleague"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5XJTwnHrtV46ZRWBgcNwxtb0KzZAwaQA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,4 +1,4 @@
-package com.example.f1fantasyleague
+package com.example.f1fantasyleague.ui.home
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -13,10 +13,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 
 @Composable
-fun App() {
+fun App(
+    onLogout: () -> Unit
+) {
     var menuExpanded by remember { mutableStateOf(false) }
     var currentScreen by remember { mutableStateOf("home") }
 
@@ -41,6 +42,10 @@ fun App() {
                 onItemClick = { selectedScreen ->
                     currentScreen = selectedScreen
                     menuExpanded = false
+                },
+                onLogoutClick = {
+                    menuExpanded = false
+                    onLogout()
                 }
             )
         }
