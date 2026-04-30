@@ -8,6 +8,7 @@ import com.example.f1fantasyleague.data.AuthRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class LoginUiState(
@@ -31,57 +32,75 @@ class LoginViewModel(
     init {
         viewModelScope.launch {
             authRepository.authState.collect { isLoggedIn ->
-                _uiState.value = _uiState.value.copy(isLoggedIn = isLoggedIn)
+                _uiState.update {
+                    it.copy(isLoggedIn = isLoggedIn)
+                }
             }
         }
     }
 
     fun onNameChange(name: String) {
-        _uiState.value = _uiState.value.copy(name = name)
+        _uiState.update {
+            it.copy(name = name)
+        }
     }
 
     fun onEmailChange(email: String) {
-        _uiState.value = _uiState.value.copy(email = email.trim())
+        _uiState.update {
+            it.copy(email = email.trim())
+        }
     }
 
     fun onPasswordChange(password: String) {
-        _uiState.value = _uiState.value.copy(password = password)
+        _uiState.update {
+            it.copy(password = password)
+        }
     }
 
     fun onConfirmPasswordChange(confirmPassword: String) {
-        _uiState.value = _uiState.value.copy(confirmPassword = confirmPassword)
+        _uiState.update {
+            it.copy(confirmPassword = confirmPassword)
+        }
     }
 
     fun toggleSignUpMode() {
-        _uiState.value = _uiState.value.copy(
-            isSignUpMode = !_uiState.value.isSignUpMode,
-            name = "",
-            password = "",
-            confirmPassword = "",
-            messageResId = null
-        )
+        _uiState.update {
+            it.copy(
+                isSignUpMode = !it.isSignUpMode,
+                name = "",
+                password = "",
+                confirmPassword = "",
+                messageResId = null
+            )
+        }
     }
 
     fun signIn() {
         val state = _uiState.value
 
         if (state.email.isBlank() || state.password.isBlank()) {
-            _uiState.value = state.copy(messageResId = R.string.msg_enter_credentials)
+            _uiState.update {
+                it.copy(messageResId = R.string.msg_enter_credentials)
+            }
             return
         }
 
         viewModelScope.launch {
-            _uiState.value = state.copy(isLoading = true, messageResId = null)
+            _uiState.update {
+                it.copy(isLoading = true, messageResId = null)
+            }
 
             val result = authRepository.signIn(state.email, state.password)
 
-            _uiState.value = _uiState.value.copy(
-                isLoading = false,
-                messageResId = result.fold(
-                    onSuccess = { R.string.msg_sign_in_success },
-                    onFailure = { R.string.msg_login_error }
+            _uiState.update {
+                it.copy(
+                    isLoading = false,
+                    messageResId = result.fold(
+                        onSuccess = { R.string.msg_sign_in_success },
+                        onFailure = { R.string.msg_login_error }
+                    )
                 )
-            )
+            }
         }
     }
 
@@ -89,27 +108,35 @@ class LoginViewModel(
         val state = _uiState.value
 
         if (state.name.isBlank() || state.email.isBlank() || state.password.isBlank()) {
-            _uiState.value = state.copy(messageResId = R.string.msg_fill_fields)
+            _uiState.update {
+                it.copy(messageResId = R.string.msg_fill_fields)
+            }
             return
         }
 
         if (state.password != state.confirmPassword) {
-            _uiState.value = state.copy(messageResId = R.string.msg_password_mismatch)
+            _uiState.update {
+                it.copy(messageResId = R.string.msg_password_mismatch)
+            }
             return
         }
 
         viewModelScope.launch {
-            _uiState.value = state.copy(isLoading = true, messageResId = null)
+            _uiState.update {
+                it.copy(isLoading = true, messageResId = null)
+            }
 
             val result = authRepository.signUp(state.name, state.email, state.password)
 
-            _uiState.value = _uiState.value.copy(
-                isLoading = false,
-                messageResId = result.fold(
-                    onSuccess = { R.string.msg_account_created },
-                    onFailure = { R.string.msg_login_error }
+            _uiState.update {
+                it.copy(
+                    isLoading = false,
+                    messageResId = result.fold(
+                        onSuccess = { R.string.msg_account_created },
+                        onFailure = { R.string.msg_login_error }
+                    )
                 )
-            )
+            }
         }
     }
 
@@ -118,6 +145,8 @@ class LoginViewModel(
     }
 
     fun clearMessage() {
-        _uiState.value = _uiState.value.copy(messageResId = null)
+        _uiState.update {
+            it.copy(messageResId = null)
+        }
     }
 }
