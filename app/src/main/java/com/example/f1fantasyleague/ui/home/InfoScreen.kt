@@ -1,39 +1,40 @@
 package com.example.f1fantasyleague.ui.home
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.f1fantasyleague.R
-import kotlinx.coroutines.launch
+import com.example.f1fantasyleague.SectionCard
+import com.example.f1fantasyleague.ui.theme.*
+
+private val cardShape = RoundedCornerShape(30.dp)
+private val outerPadding = 20.dp
+private val sectionPadding = 24.dp
+private val borderWidth = 1.dp
+private val padding14 = 14.dp
 
 @Composable
 fun InfoScreenContent() {
-    val listState = rememberLazyListState()
-    val coroutineScope = rememberCoroutineScope()
-
     val topSections = listOf(
         stringResource(R.string.how_to_vote_title) to
                 stringResource(R.string.how_to_vote_desc),
@@ -68,102 +69,94 @@ fun InfoScreenContent() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
-            .padding(24.dp)
+            .background(BackgroundPrimary),
+        contentAlignment = Alignment.TopCenter
     ) {
-        LazyColumn(
-            state = listState,
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(24.dp),
-            verticalArrangement = Arrangement.spacedBy(24.dp)
-        ) {
-            item {
-                Text(
-                    text = stringResource(R.string.rules_title),
-                    color = MaterialTheme.colorScheme.secondary,
-                    style = MaterialTheme.typography.headlineMedium,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                )
-            }
-
-            items(topSections) { section ->
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = section.first,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.titleLarge,
-                        textAlign = TextAlign.Center
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Text(
-                        text = section.second,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.bodyLarge,
-                        textAlign = TextAlign.Center
-                    )
-                }
-            }
-
-            item {
-                Text(
-                    text = stringResource(R.string.scoring_title),
-                    color = MaterialTheme.colorScheme.secondary,
-                    style = MaterialTheme.typography.headlineMedium,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                )
-            }
-
-            items(bottomSections) { section ->
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = section.first,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.titleLarge,
-                        textAlign = TextAlign.Center
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Text(
-                        text = section.second,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.bodyLarge,
-                        textAlign = TextAlign.Center
-                    )
-                }
-            }
-        }
-
-        FloatingActionButton(
-            onClick = {
-                coroutineScope.launch {
-                    listState.animateScrollToItem(0)
-                }
-            },
-            containerColor = MaterialTheme.colorScheme.primary,
+        Column(
             modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp)
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+                .padding(
+                    top = outerPadding,
+                    bottom = outerPadding
+                ),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Icon(
-                imageVector = Icons.Default.KeyboardArrowUp,
-                contentDescription = stringResource(R.string.scroll_top_desc),
-                tint = MaterialTheme.colorScheme.onPrimary
-            )
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                shape = cardShape,
+                colors = CardDefaults.cardColors(containerColor = SurfacePrimary),
+                border = BorderStroke(borderWidth, BorderSubtle),
+                elevation = CardDefaults.cardElevation(defaultElevation = padding14)
+            ) {
+                SectionCard(title = stringResource(R.string.rules_title))
+
+                Column(
+                    modifier = Modifier.padding(
+                        horizontal = sectionPadding,
+                        vertical = sectionPadding
+                    ),
+                    verticalArrangement = Arrangement.spacedBy(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    topSections.forEach { section ->
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = section.first,
+                                color = TextPrimary,
+                                style = MaterialTheme.typography.titleLarge,
+                                textAlign = TextAlign.Center
+                            )
+
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            Text(
+                                text = section.second,
+                                color = TextPrimary,
+                                style = MaterialTheme.typography.bodyLarge,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
+
+                    Text(
+                        text = stringResource(R.string.scoring_title),
+                        color = TextPrimary,
+                        style = MaterialTheme.typography.headlineMedium,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp)
+                    )
+
+                    bottomSections.forEach { section ->
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = section.first,
+                                color = TextPrimary,
+                                style = MaterialTheme.typography.titleLarge,
+                                textAlign = TextAlign.Center
+                            )
+
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            Text(
+                                text = section.second,
+                                color = TextPrimary,
+                                style = MaterialTheme.typography.bodyLarge,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }

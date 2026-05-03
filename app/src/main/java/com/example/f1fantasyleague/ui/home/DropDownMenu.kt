@@ -14,9 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.f1fantasyleague.R
-import com.example.f1fantasyleague.ui.theme.TextPrimary
-import com.example.f1fantasyleague.ui.theme.TextSecondary
+import com.example.f1fantasyleague.ui.theme.*
 
+private val spacerPadding = 26.dp
 @Composable
 fun DropDownMenu(
     currentScreen: String,
@@ -26,7 +26,7 @@ fun DropDownMenu(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.background)
+            .background(SurfacePrimary)
             .padding(horizontal = 24.dp, vertical = 12.dp)
     ) {
         MenuItem(
@@ -35,7 +35,7 @@ fun DropDownMenu(
             onClick = { onItemClick("home") }
         )
 
-        Spacer(modifier = Modifier.height(26.dp))
+        Spacer(modifier = Modifier.height(spacerPadding))
 
         MenuItem(
             title = stringResource(R.string.menu_info),
@@ -43,7 +43,7 @@ fun DropDownMenu(
             onClick = { onItemClick("info") }
         )
 
-        Spacer(modifier = Modifier.height(26.dp))
+        Spacer(modifier = Modifier.height(spacerPadding))
 
         MenuItem(
             title = stringResource(R.string.menu_standings),
@@ -51,7 +51,7 @@ fun DropDownMenu(
             onClick = { onItemClick("standings") }
         )
 
-        Spacer(modifier = Modifier.height(26.dp))
+        Spacer(modifier = Modifier.height(spacerPadding))
 
         MenuItem(
             title = stringResource(R.string.menu_results),
@@ -59,7 +59,7 @@ fun DropDownMenu(
             onClick = { onItemClick("results") }
         )
 
-        Spacer(modifier = Modifier.height(26.dp))
+        Spacer(modifier = Modifier.height(spacerPadding))
 
         MenuItem(
             title = stringResource(R.string.menu_hotlaps),
@@ -67,7 +67,7 @@ fun DropDownMenu(
             onClick = { onItemClick("hotlaps") }
         )
 
-        Spacer(modifier = Modifier.height(26.dp))
+        Spacer(modifier = Modifier.height(spacerPadding))
 
         Text(
             text = stringResource(R.string.menu_logout),
