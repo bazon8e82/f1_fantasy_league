@@ -14,7 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.f1fantasyleague.R
-import com.example.f1fantasyleague.ui.theme.*
+import com.example.f1fantasyleague.ui.theme.SurfacePrimary
+import com.example.f1fantasyleague.ui.theme.TextPrimary
+import com.example.f1fantasyleague.ui.theme.TextSecondary
 
 private val spacerPadding = 26.dp
 @Composable

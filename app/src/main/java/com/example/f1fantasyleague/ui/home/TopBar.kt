@@ -22,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.f1fantasyleague.R
-import com.example.f1fantasyleague.ui.theme.IconMuted
 import com.example.f1fantasyleague.ui.theme.TextPrimary
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,8 +53,7 @@ fun TopBar(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Menu,
-                        contentDescription = stringResource(R.string.menu_icon_desc),
-                        tint = IconMuted
+                        contentDescription = stringResource(R.string.menu_icon_desc)
                     )
                 }
             },

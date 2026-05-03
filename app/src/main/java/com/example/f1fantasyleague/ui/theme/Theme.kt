@@ -11,8 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 
 @Immutable
 data class F1Colors(
@@ -46,6 +46,11 @@ private val LightF1Colors = F1Colors(
 )
 
 private val LocalF1Colors = staticCompositionLocalOf { DarkF1Colors }
+
+object F1Theme {
+    val colors: F1Colors
+        @Composable get() = LocalF1Colors.current
+}
 
 private val DarkColorScheme = darkColorScheme(
     primary = BrandPrimary,
@@ -97,6 +102,7 @@ fun F1FantasyLeagueTheme(
         MaterialTheme(
             colorScheme = colorScheme,
             typography = Typography,
-            content = content)
+            content = content
+        )
     }
 }
