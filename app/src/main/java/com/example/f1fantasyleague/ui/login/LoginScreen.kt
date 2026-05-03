@@ -33,7 +33,7 @@ fun LoginScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(BackgroundDark)
+            .background(BackgroundPrimary)
             .padding(24.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -115,7 +115,7 @@ fun LoginScreen(
                     .fillMaxWidth()
                     .height(52.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = PrimaryRed,
+                    containerColor = BrandPrimary,
                     contentColor = TextPrimary
                 )
             ) {
@@ -143,7 +143,7 @@ fun LoginScreen(
                         stringResource(R.string.login_sign_in)
                     else
                         stringResource(R.string.login_sign_up),
-                    color = PrimaryRed,
+                    color = BrandPrimary,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.clickable {
                         onToggleSignUpMode()
@@ -192,11 +192,11 @@ fun LoginTextField(
         colors = OutlinedTextFieldDefaults.colors(
             focusedTextColor = TextPrimary,
             unfocusedTextColor = TextPrimary,
-            focusedBorderColor = PrimaryRed,
+            focusedBorderColor = BrandPrimary,
             unfocusedBorderColor = BorderDark,
-            focusedLabelColor = PrimaryRed,
+            focusedLabelColor = BrandPrimary,
             unfocusedLabelColor = TextMuted,
-            cursorColor = PrimaryRed
+            cursorColor = BrandPrimary
         )
     )
 }
