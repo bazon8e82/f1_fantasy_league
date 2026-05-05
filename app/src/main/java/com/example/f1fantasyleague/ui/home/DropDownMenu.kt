@@ -7,6 +7,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,9 +22,11 @@ import com.example.f1fantasyleague.ui.theme.TextPrimary
 import com.example.f1fantasyleague.ui.theme.TextSecondary
 
 private val spacerPadding = 26.dp
+
 @Composable
 fun DropDownMenu(
     currentScreen: String,
+    currentUserEmail: String?,
     onItemClick: (String) -> Unit,
     onLogoutClick: () -> Unit
 ) {
@@ -79,15 +84,20 @@ fun DropDownMenu(
                 onLogoutClick()
             }
         )
-/*
-        Spacer(modifier = Modifier.height(12.dp))
 
-        Icon(
-            imageVector = Icons.Filled.Lock,
-            contentDescription = "Lock",
-            tint = TextSecondary
-        )
-*/
+        Spacer(modifier = Modifier.height(14.dp))
+
+        if (currentUserEmail == "admin@gmail.com") {
+            Icon(
+                imageVector = Icons.Filled.Lock,
+                contentDescription = stringResource(R.string.lock_icon_desc),
+                tint = TextSecondary,
+                modifier = Modifier.clickable {
+                    onItemClick("admin")
+                }
+            )
+        }
+
     }
 }
 

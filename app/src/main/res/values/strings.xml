@@ -88,4 +88,13 @@
     <string name="table_race_header">Race</string>
     <string name="table_mystery_header">Mystery</string>
 
+    <string name="admin_title">Admin - Enter Results</string>
+    <string name="round_label">Round</string>
+    <string name="admin_qualifying_top_10">Qualifying Top 10</string>
+    <string name="admin_race_top_10">Race Top 10</string>
+    <string name="admin_save_results">Save Results</string>
+
+    <string name="msg_results_saved">Results saved</string>
+    <string name="msg_results_save_error">Error saving results</string>
+
 </resources>

@@ -12,6 +12,9 @@ import com.example.f1fantasyleague.ui.home.App
 import com.example.f1fantasyleague.ui.login.LoginScreen
 import com.example.f1fantasyleague.ui.login.LoginViewModel
 import com.example.f1fantasyleague.ui.theme.F1FantasyLeagueTheme
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+import android.util.Log
 
 class MainActivity : ComponentActivity() {
 
