@@ -12,6 +12,7 @@ uiGraphics = "1.11.0"
 benchmarkTraceprocessor = "1.4.1"
 foundationLayout = "1.11.0"
 
+
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -35,6 +36,7 @@ material-icons-extended = { module = "androidx.compose.material:material-icons-e
 coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version = "1.10.2" }
 androidx-benchmark-traceprocessor = { group = "androidx.benchmark", name = "benchmark-traceprocessor", version.ref = "benchmarkTraceprocessor" }
 androidx-compose-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout", version.ref = "foundationLayout" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

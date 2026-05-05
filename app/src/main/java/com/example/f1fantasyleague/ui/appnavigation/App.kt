@@ -16,6 +16,8 @@ import androidx.compose.ui.unit.dp
 import com.example.f1fantasyleague.ui.home.HomeScreen
 import com.example.f1fantasyleague.ui.info.InfoScreenContent
 import com.example.f1fantasyleague.ui.theme.*
+import com.example.f1fantasyleague.ui.admin.AdminResultsScreen
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun App(
@@ -23,6 +25,7 @@ fun App(
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
     var currentScreen by remember { mutableStateOf("home") }
+    val currentUserEmail = FirebaseAuth.getInstance().currentUser?.email
 
     Column(
         modifier = Modifier
@@ -42,8 +45,9 @@ fun App(
         ) {
             DropDownMenu(
                 currentScreen = currentScreen,
-                onItemClick = { selectedScreen ->
-                    currentScreen = selectedScreen
+                currentUserEmail = currentUserEmail,
+                onItemClick = { screen ->
+                    currentScreen = screen
                     menuExpanded = false
                 },
                 onLogoutClick = {
@@ -65,6 +69,7 @@ fun App(
                 "standings" -> ScreenPlaceholder("Standings")
                 "results" -> ScreenPlaceholder("Results")
                 "hotlaps" -> ScreenPlaceholder("Hotlaps")
+                "admin" -> AdminResultsScreen()
             }
         }
     }
