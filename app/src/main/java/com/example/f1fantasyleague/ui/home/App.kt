@@ -13,6 +13,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.f1fantasyleague.HomeScreen
+import com.example.f1fantasyleague.ui.theme.*
 
 @Composable
 fun App(
@@ -24,7 +26,7 @@ fun App(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(BackgroundPrimary)
     ) {
         TopBar(
             onMenuClick = {
@@ -53,11 +55,11 @@ fun App(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-                .padding(24.dp)
+                .background(BackgroundPrimary)
+                .padding(if (currentScreen == "home") 0.dp else 24.dp)
         ) {
             when (currentScreen) {
-                "home" -> ScreenPlaceholder("Home screen")
+                "home" -> HomeScreen()
                 "info" -> InfoScreenContent()
                 "standings" -> ScreenPlaceholder("Standings")
                 "results" -> ScreenPlaceholder("Results")
@@ -71,7 +73,7 @@ fun App(
 fun ScreenPlaceholder(title: String) {
     Text(
         text = title,
-        color = MaterialTheme.colorScheme.onBackground,
+        color = TextPrimary,
         style = MaterialTheme.typography.titleLarge
     )
 }
