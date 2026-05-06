@@ -65,7 +65,10 @@
     <string name="scroll_top_desc">Scroll to top</string>
     <string name="lock_icon_desc">Lock</string>
 
-    <string name="next_race">Next race</string>
+    <string name="next_race">Miami Grand Prix</string>
+    <string name="number_of_races">Race 4/22</string>
+    <string name="time_of_race">02/05, 22:00</string>
+    <string name="time_to_race">11d 10h 32m 20s</string>
 
     <string name="guess_title">Make a guess</string>
     <string name="passcode">Your Passcode</string>
@@ -84,5 +87,14 @@
     <string name="table_qualifying_header">Qualifying</string>
     <string name="table_race_header">Race</string>
     <string name="table_mystery_header">Mystery</string>
+
+    <string name="admin_title">Admin - Enter Results</string>
+    <string name="round_label">Round</string>
+    <string name="admin_qualifying_top_10">Qualifying Top 10</string>
+    <string name="admin_race_top_10">Race Top 10</string>
+    <string name="admin_save_results">Save Results</string>
+
+    <string name="msg_results_saved">Results saved</string>
+    <string name="msg_results_save_error">Error saving results</string>
 
 </resources>

@@ -26,4 +26,22 @@ class AdminResultsRepository {
             .set(data)
             .await()
     }
+
+    suspend fun saveRace(
+        round: String,
+        raceName: String,
+        raceDate: String
+    ) {
+        val data = hashMapOf(
+            "raceId" to round,
+            "raceName" to raceName,
+            "raceDate" to raceDate
+        )
+
+        firestore
+            .collection("races")
+            .document("round$round")
+            .set(data)
+            .await()
+    }
 }
