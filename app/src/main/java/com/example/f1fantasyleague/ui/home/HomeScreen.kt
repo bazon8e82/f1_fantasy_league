@@ -1,4 +1,4 @@
-package com.example.f1fantasyleague
+package com.example.f1fantasyleague.ui.home
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -35,10 +35,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.f1fantasyleague.ui.theme.*
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
+import android.widget.Toast
+import com.example.f1fantasyleague.R
 
 private val cardShape = RoundedCornerShape(30.dp)
 private val outerPadding = 20.dp
@@ -71,6 +76,17 @@ fun HomeScreen() {
         listOf("Marin S.", "RUS/ANT/PIA", "ANT/RUS/PIA", "25"),
         listOf("Bruno B", "RUS/ANT/PIA", "ANT/RUS/PIA", "-")
     )
+
+    val predictionViewModel: PredictionViewModel = viewModel()
+    val predictionUiState by predictionViewModel.uiState.collectAsState()
+    val context = LocalContext.current
+
+    LaunchedEffect(predictionUiState.messageResId) {
+        predictionUiState.messageResId?.let { message ->
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            predictionViewModel.clearMessage()
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -148,30 +164,42 @@ fun HomeScreen() {
                     verticalArrangement = Arrangement.spacedBy(tableCellStartPadding),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(
-                        text = stringResource(R.string.passcode),
+                    OutlinedTextField(
+                        value = predictionUiState.qualifyingGuess,
+                        onValueChange = predictionViewModel::onQualifyingGuessChange,
                         modifier = Modifier.fillMaxWidth(),
-                        color = TextPrimary,
-                        style = MaterialTheme.typography.headlineSmall,
-                        textAlign = TextAlign.Center
+                        label = { Text(stringResource(R.string.qualifying_guess)) },
+                        placeholder = { Text(stringResource(R.string.guess_placeholder)) },
+                        singleLine = true
                     )
 
                     OutlinedTextField(
-                        value = passcode,
-                        onValueChange = { passcode = it },
+                        value = predictionUiState.raceGuess,
+                        onValueChange = predictionViewModel::onRaceGuessChange,
                         modifier = Modifier.fillMaxWidth(),
-                        singleLine = true,
-                        visualTransformation = PasswordVisualTransformation()
+                        label = { Text(stringResource(R.string.race_guess)) },
+                        placeholder = { Text(stringResource(R.string.guess_placeholder)) },
+                        singleLine = true
+                    )
+
+                    OutlinedTextField(
+                        value = predictionUiState.mysteryGuess,
+                        onValueChange = predictionViewModel::onMysteryGuessChange,
+                        modifier = Modifier.fillMaxWidth(),
+                        label = { Text(stringResource(R.string.mystery_guess)) },
+                        placeholder = { Text("VER") },
+                        singleLine = true
                     )
 
                     Button(
-                        onClick = { },
+                        onClick = predictionViewModel::submitPrediction,
+                        enabled = !predictionUiState.isLoading,
                         colors = ButtonDefaults.buttonColors(containerColor = BrandPrimary)
                     ) {
                         Text(
-                            text = stringResource(R.string.check_button),
+                            text = stringResource(R.string.submit_guess),
                             color = TextPrimary,
-                            style = MaterialTheme.typography.headlineSmall
+                            style = MaterialTheme.typography.titleMedium
                         )
                     }
                 }

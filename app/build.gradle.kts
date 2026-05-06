@@ -64,4 +64,5 @@ dependencies {
     implementation(libs.coroutines.play.services)
     implementation(libs.material.icons.extended)
     implementation(libs.coroutines.play.services)
+    implementation(libs.lifecycle.viewmodel.compose)
 }

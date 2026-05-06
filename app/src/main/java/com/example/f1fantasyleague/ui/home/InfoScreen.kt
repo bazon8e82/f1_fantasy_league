@@ -24,7 +24,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.f1fantasyleague.R
-import com.example.f1fantasyleague.SectionCard
 import com.example.f1fantasyleague.ui.theme.*
 
 private val cardShape = RoundedCornerShape(30.dp)
