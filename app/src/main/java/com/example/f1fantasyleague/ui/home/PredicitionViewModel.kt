@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import com.example.f1fantasyleague.R
 
 data class PredictionUiState(
-    val round: String = "1",
+    val round: String = "4",
     val qualifyingGuess: String = "",
     val raceGuess: String = "",
     val mysteryGuess: String = "",

@@ -25,6 +25,12 @@ class AdminResultsRepository {
             .document("round_$round")
             .set(data)
             .await()
+
+        ScoresRepository().calculateAndSaveScores(
+            raceWeekendId = round,
+            actualQualifyingTop10 = qualifyingTop10,
+            actualRaceTop10 = raceTop10
+        )
     }
 
     suspend fun saveRace(
