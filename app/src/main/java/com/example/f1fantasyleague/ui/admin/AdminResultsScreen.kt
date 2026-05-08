@@ -29,9 +29,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.f1fantasyleague.R
 import com.example.f1fantasyleague.data.repository.AdminResultsRepository
+import com.example.f1fantasyleague.data.repository.MysteryQuestionRepository
 import com.example.f1fantasyleague.ui.theme.BrandPrimary
 import com.example.f1fantasyleague.ui.theme.SurfaceSecondary
 import kotlinx.coroutines.launch
+
 
 @Composable
 fun AdminResultsScreen() {
@@ -55,6 +57,9 @@ fun AdminResultsScreen() {
     val resultsSaveErrorMessage = stringResource(R.string.msg_results_save_error)
     val raceSavedMessage = stringResource(R.string.msg_race_saved)
     val raceSaveErrorMessage = stringResource(R.string.msg_race_save_error)
+
+    var mysteryQuestion by rememberSaveable { mutableStateOf("") }
+    var mysteryAnswer by rememberSaveable { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -240,6 +245,68 @@ fun AdminResultsScreen() {
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(stringResource(R.string.admin_save_results))
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = SurfaceSecondary)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.admin_mystery_question),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = BrandPrimary
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                OutlinedTextField(
+                    value = selectedRound,
+                    onValueChange = { selectedRound = it },
+                    label = { Text(stringResource(R.string.round_label)) },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                OutlinedTextField(
+                    value = mysteryQuestion,
+                    onValueChange = { mysteryQuestion = it },
+                    label = { Text(stringResource(R.string.admin_mystery_question)) },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                OutlinedTextField(
+                    value = mysteryAnswer,
+                    onValueChange = { mysteryAnswer = it.uppercase() },
+                    label = { Text(stringResource(R.string.admin_correct_answer)) },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Button(
+                    onClick = {
+                        scope.launch {
+                            MysteryQuestionRepository().saveMysteryQuestion(
+                                round = selectedRound,
+                                question = mysteryQuestion,
+                                answer = mysteryAnswer
+                            )
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(stringResource(R.string.admin_save_mystery_question))
                 }
             }
         }

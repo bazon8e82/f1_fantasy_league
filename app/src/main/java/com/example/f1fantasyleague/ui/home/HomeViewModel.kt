@@ -2,18 +2,18 @@ package com.example.f1fantasyleague.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.f1fantasyleague.data.repository.MysteryQuestionRepository
 import com.example.f1fantasyleague.data.RaceRepository
 import com.example.f1fantasyleague.data.models.Race
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 
 data class HomeUiState(
+    val mysteryQuestions: List<List<String>> = emptyList(),
+    val isLoading: Boolean = false
     val currentRace: Race? = null,
     val nextRaceNumber: String = "",
     val raceDate: String = "",
@@ -22,20 +22,26 @@ data class HomeUiState(
     val error: String? = null
 )
 
+class HomeViewModel : ViewModel() {
+
+    private val mysteryQuestionRepository = MysteryQuestionRepository()
 class HomeViewModel(
     private val raceRepository: RaceRepository = RaceRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
+    val uiState = _uiState.asStateFlow()
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
     private var countdownJob: Job? = null
 
+    fun loadMysteryQuestions() {
     init {
         loadInitialRace()
     }
 
     private fun loadInitialRace() {
         viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true)
             _uiState.update { it.copy(isLoading = true, error = null) }
 
             val raceResult = raceRepository.getRace()
@@ -44,6 +50,7 @@ class HomeViewModel(
                 startCountdown()
             }
 
+            val questions = mysteryQuestionRepository.getAllMysteryQuestions()
             raceResult.onFailure { error ->
                 _uiState.update {
                     it.copy(
@@ -68,6 +75,13 @@ class HomeViewModel(
                 startCountdown()
             }
 
+            _uiState.value = _uiState.value.copy(
+                mysteryQuestions = questions,
+                isLoading = false
+            )
+        }
+    }
+}
             nextRaceResult.onFailure { error ->
                 _uiState.update {
                     it.copy(

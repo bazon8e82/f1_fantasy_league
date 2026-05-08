@@ -88,7 +88,7 @@
     <string name="table_race_header">Race</string>
     <string name="table_mystery_header">Mystery</string>
 
-    <string name="admin_title">Admin - Enter Results</string>
+    <string name="admin_title">Enter Results</string>
     <string name="round_label">Round</string>
     <string name="admin_qualifying_top_10">Qualifying Top 10</string>
     <string name="admin_race_top_10">Race Top 10</string>
@@ -96,5 +96,25 @@
 
     <string name="msg_results_saved">Results saved</string>
     <string name="msg_results_save_error">Error saving results</string>
+
+    <string name="admin_race_info">Race info</string>
+    <string name="admin_race_name">Race name</string>
+    <string name="admin_race_date">Race date</string>
+    <string name="admin_save_race">Save Race</string>
+    <string name="msg_race_saved">Race saved</string>
+    <string name="msg_race_save_error">Error saving race</string>
+
+    <string name="qualifying_guess">Qualifying Top 3</string>
+    <string name="race_guess">Race Top 3</string>
+    <string name="mystery_guess">Mystery Guess</string>
+    <string name="guess_placeholder">VER/LEC/NOR</string>
+    <string name="submit_guess">Submit Guess</string>
+    <string name="msg_guess_saved">Guess saved</string>
+    <string name="msg_guess_save_error">Error saving guess</string>
+
+    <string name="msg_prediction_invalid">Fill guesses in format VER/LEC/NOR</string>
+    <string name="msg_prediction_saved">Prediction saved</string>
+    <string name="msg_prediction_error">Error saving prediction</string>
+    <string name="msg_usr_not_logged_in">User not logged in</string>
 
 </resources>
