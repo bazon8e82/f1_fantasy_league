@@ -13,24 +13,24 @@ class ScoresRepository(
         actualQualifyingTop10: List<String>,
         actualRaceTop10: List<String>
     ) {
-        val predictionsSnapshot = firestore
+        val predictionDocument = firestore
             .collection("predictions")
             .document("round$raceWeekendId")
-            .collection("users")
             .get()
             .await()
 
-        predictionsSnapshot.documents.forEach { document ->
-            val userId = document.id
+        predictionDocument.data?.forEach { entry ->
+            val userId = entry.key
+            val prediction = entry.value as? Map<*, *> ?: return@forEach
 
             val predictedQualifyingTop3 =
-                document.get("qualifyingTop3") as? List<String> ?: emptyList()
+                prediction["qualifyingTop3"] as? List<String> ?: emptyList()
 
             val predictedRaceTop3 =
-                document.get("raceTop3") as? List<String> ?: emptyList()
+                prediction["raceTop3"] as? List<String> ?: emptyList()
 
             val mysteryGuessPoints =
-                document.getLong("mysteryGuessPoints")?.toInt() ?: 0
+                (prediction["mysteryGuessPoints"] as? Long)?.toInt() ?: 0
 
             val qualifyingPoints = PointsCalculator.calculateQualifyingPoints(
                 predictedTop3 = predictedQualifyingTop3,

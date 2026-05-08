@@ -22,21 +22,21 @@ class PredictionRepository {
         val raceTop3 = parseDriverCodes(raceTop3Input)
 
         val data = hashMapOf(
-            "userId" to user.uid,
             "email" to user.email,
-            "round" to round,
             "qualifyingTop3" to qualifyingTop3,
             "raceTop3" to raceTop3,
-            "mysteryGuess" to mysteryGuess.uppercase().trim(),
-            "submittedAt" to Timestamp.now()
+            "mysteryGuess" to mysteryGuess.uppercase().trim()
         )
 
         firestore
             .collection("predictions")
             .document("round$round")
-            .collection("users")
-            .document(user.uid)
-            .set(data)
+            .set(
+                mapOf(
+                    user.uid to data
+                ),
+                com.google.firebase.firestore.SetOptions.merge()
+            )
             .await()
     }
 

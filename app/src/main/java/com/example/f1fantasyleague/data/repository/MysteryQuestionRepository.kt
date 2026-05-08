@@ -17,7 +17,6 @@ class MysteryQuestionRepository {
             "round" to round,
             "question" to question,
             "answer" to answer.uppercase(),
-            "savedAt" to Timestamp.now()
         )
 
         firestore
