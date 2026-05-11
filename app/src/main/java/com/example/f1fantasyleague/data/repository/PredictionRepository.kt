@@ -1,5 +1,11 @@
 package com.example.f1fantasyleague.data.repository
 
+import com.example.f1fantasyleague.data.firestore.COLLECTION_PREDICTIONS
+import com.example.f1fantasyleague.data.firestore.DOCUMENT_ROUND_PREFIX
+import com.example.f1fantasyleague.data.firestore.FIELD_EMAIL
+import com.example.f1fantasyleague.data.firestore.FIELD_MYSTERY_GUESS
+import com.example.f1fantasyleague.data.firestore.FIELD_QUALIFYING_TOP_3
+import com.example.f1fantasyleague.data.firestore.FIELD_RACE_TOP_3
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -21,16 +27,18 @@ class PredictionRepository {
         val qualifyingTop3 = parseDriverCodes(qualifyingTop3Input)
         val raceTop3 = parseDriverCodes(raceTop3Input)
 
+        val roundDocumentId = "$DOCUMENT_ROUND_PREFIX$round"
+
         val data = hashMapOf(
-            "email" to user.email,
-            "qualifyingTop3" to qualifyingTop3,
-            "raceTop3" to raceTop3,
-            "mysteryGuess" to mysteryGuess.uppercase().trim()
+            FIELD_EMAIL to user.email,
+            FIELD_QUALIFYING_TOP_3 to qualifyingTop3,
+            FIELD_RACE_TOP_3 to raceTop3,
+            FIELD_MYSTERY_GUESS to mysteryGuess.uppercase().trim()
         )
 
         firestore
-            .collection("predictions")
-            .document("round$round")
+            .collection(COLLECTION_PREDICTIONS)
+            .document(roundDocumentId)
             .set(
                 mapOf(
                     user.uid to data

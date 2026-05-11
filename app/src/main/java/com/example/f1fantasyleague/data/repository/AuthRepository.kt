@@ -1,5 +1,9 @@
 package com.example.f1fantasyleague.data.repository
 
+import com.example.f1fantasyleague.data.firestore.COLLECTION_USERS
+import com.example.f1fantasyleague.data.firestore.FIELD_EMAIL
+import com.example.f1fantasyleague.data.firestore.FIELD_NAME
+import com.example.f1fantasyleague.data.firestore.FIELD_POINTS
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.channels.awaitClose
@@ -39,12 +43,12 @@ class AuthRepository(
             val userId = result.user?.uid ?: return Result.failure(Exception("User ID not found"))
 
             val user = mapOf(
-                "name" to name.trim(),
-                "email" to email.trim(),
-                "points" to 0
+                FIELD_NAME to name.trim(),
+                FIELD_EMAIL to email.trim(),
+                FIELD_POINTS to 0
             )
 
-            db.collection("users")
+            db.collection(COLLECTION_USERS)
                 .document(userId)
                 .set(user)
                 .await()

@@ -117,4 +117,8 @@
     <string name="msg_prediction_error">Error saving prediction</string>
     <string name="msg_usr_not_logged_in">User not logged in</string>
 
+    <string name="admin_mystery_question">Mystery Question</string>
+    <string name="admin_correct_answer">Correct Answer</string>
+    <string name="admin_save_mystery_question">Save Mystery Question</string>
+
 </resources>

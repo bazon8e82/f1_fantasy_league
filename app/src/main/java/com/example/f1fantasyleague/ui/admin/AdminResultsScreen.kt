@@ -16,50 +16,66 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.f1fantasyleague.R
-import com.example.f1fantasyleague.data.repository.AdminResultsRepository
-import com.example.f1fantasyleague.data.repository.MysteryQuestionRepository
 import com.example.f1fantasyleague.ui.theme.BrandPrimary
 import com.example.f1fantasyleague.ui.theme.SurfaceSecondary
-import kotlinx.coroutines.launch
-
 
 @Composable
-fun AdminResultsScreen() {
-    var selectedRound by rememberSaveable { mutableStateOf("1") }
-    var raceName by rememberSaveable { mutableStateOf("") }
-    var raceDate by rememberSaveable { mutableStateOf("") }
-
-    var qualifyingResults by rememberSaveable {
-        mutableStateOf(List(10) { "" })
-    }
-
-    var raceResults by rememberSaveable {
-        mutableStateOf(List(10) { "" })
-    }
-
+fun AdminResultsScreen(
+    viewModel: AdminResultsViewModel = viewModel()
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-    val repository = remember { AdminResultsRepository() }
 
     val resultsSavedMessage = stringResource(R.string.msg_results_saved)
     val resultsSaveErrorMessage = stringResource(R.string.msg_results_save_error)
     val raceSavedMessage = stringResource(R.string.msg_race_saved)
     val raceSaveErrorMessage = stringResource(R.string.msg_race_save_error)
+    val mysteryQuestionSavedMessage = stringResource(R.string.msg_mystery_question_saved)
+    val mysteryQuestionSaveErrorMessage = stringResource(R.string.msg_mystery_question_save_error)
 
-    var mysteryQuestion by rememberSaveable { mutableStateOf("") }
-    var mysteryAnswer by rememberSaveable { mutableStateOf("") }
+    LaunchedEffect(uiState.message) {
+        when (uiState.message) {
+            AdminResultsMessage.RACE_SAVED -> {
+                Toast.makeText(context, raceSavedMessage, Toast.LENGTH_SHORT).show()
+            }
+
+            AdminResultsMessage.RACE_SAVE_ERROR -> {
+                Toast.makeText(context, raceSaveErrorMessage, Toast.LENGTH_SHORT).show()
+            }
+
+            AdminResultsMessage.RESULTS_SAVED -> {
+                Toast.makeText(context, resultsSavedMessage, Toast.LENGTH_SHORT).show()
+            }
+
+            AdminResultsMessage.RESULTS_SAVE_ERROR -> {
+                Toast.makeText(context, resultsSaveErrorMessage, Toast.LENGTH_SHORT).show()
+            }
+
+            AdminResultsMessage.MYSTERY_QUESTION_SAVED -> {
+                Toast.makeText(context, mysteryQuestionSavedMessage, Toast.LENGTH_SHORT).show()
+            }
+
+            AdminResultsMessage.MYSTERY_QUESTION_SAVE_ERROR -> {
+                Toast.makeText(context, mysteryQuestionSaveErrorMessage, Toast.LENGTH_SHORT).show()
+            }
+
+            null -> Unit
+        }
+
+        if (uiState.message != null) {
+            viewModel.clearMessage()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -84,8 +100,8 @@ fun AdminResultsScreen() {
                 Spacer(modifier = Modifier.height(12.dp))
 
                 OutlinedTextField(
-                    value = selectedRound,
-                    onValueChange = { selectedRound = it },
+                    value = uiState.selectedRound,
+                    onValueChange = viewModel::onRoundChange,
                     label = { Text(stringResource(R.string.round_label)) },
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -93,8 +109,8 @@ fun AdminResultsScreen() {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
-                    value = raceName,
-                    onValueChange = { raceName = it },
+                    value = uiState.raceName,
+                    onValueChange = viewModel::onRaceNameChange,
                     label = { Text(stringResource(R.string.admin_race_name)) },
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -102,8 +118,8 @@ fun AdminResultsScreen() {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
-                    value = raceDate,
-                    onValueChange = { raceDate = it },
+                    value = uiState.raceDate,
+                    onValueChange = viewModel::onRaceDateChange,
                     label = { Text(stringResource(R.string.admin_race_date)) },
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -111,29 +127,7 @@ fun AdminResultsScreen() {
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Button(
-                    onClick = {
-                        scope.launch {
-                            try {
-                                repository.saveRace(
-                                    round = selectedRound,
-                                    raceName = raceName,
-                                    raceDate = raceDate
-                                )
-
-                                Toast.makeText(
-                                    context,
-                                    raceSavedMessage,
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            } catch (e: Exception) {
-                                Toast.makeText(
-                                    context,
-                                    raceSaveErrorMessage,
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        }
-                    },
+                    onClick = viewModel::saveRace,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(stringResource(R.string.admin_save_race))
@@ -160,8 +154,8 @@ fun AdminResultsScreen() {
                 Spacer(modifier = Modifier.height(18.dp))
 
                 OutlinedTextField(
-                    value = selectedRound,
-                    onValueChange = { selectedRound = it },
+                    value = uiState.selectedRound,
+                    onValueChange = viewModel::onRoundChange,
                     label = { Text(stringResource(R.string.round_label)) },
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -179,15 +173,14 @@ fun AdminResultsScreen() {
 
                 for (i in 0 until 10) {
                     OutlinedTextField(
-                        value = qualifyingResults[i],
+                        value = uiState.qualifyingResults[i],
                         onValueChange = { value ->
-                            qualifyingResults = qualifyingResults.toMutableList().also {
-                                it[i] = value.uppercase()
-                            }
+                            viewModel.onQualifyingResultChange(i, value)
                         },
                         label = { Text("Q${i + 1}") },
                         modifier = Modifier.fillMaxWidth()
                     )
+
                     Spacer(modifier = Modifier.height(8.dp))
                 }
 
@@ -204,44 +197,21 @@ fun AdminResultsScreen() {
 
                 for (i in 0 until 10) {
                     OutlinedTextField(
-                        value = raceResults[i],
+                        value = uiState.raceResults[i],
                         onValueChange = { value ->
-                            raceResults = raceResults.toMutableList().also {
-                                it[i] = value.uppercase()
-                            }
+                            viewModel.onRaceResultChange(i, value)
                         },
                         label = { Text("R${i + 1}") },
                         modifier = Modifier.fillMaxWidth()
                     )
+
                     Spacer(modifier = Modifier.height(8.dp))
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Button(
-                    onClick = {
-                        scope.launch {
-                            try {
-                                repository.saveRaceWeekendResults(
-                                    round = selectedRound,
-                                    qualifyingTop10 = qualifyingResults,
-                                    raceTop10 = raceResults
-                                )
-
-                                Toast.makeText(
-                                    context,
-                                    resultsSavedMessage,
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            } catch (e: Exception) {
-                                Toast.makeText(
-                                    context,
-                                    resultsSaveErrorMessage,
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        }
-                    },
+                    onClick = viewModel::saveResults,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(stringResource(R.string.admin_save_results))
@@ -268,8 +238,8 @@ fun AdminResultsScreen() {
                 Spacer(modifier = Modifier.height(12.dp))
 
                 OutlinedTextField(
-                    value = selectedRound,
-                    onValueChange = { selectedRound = it },
+                    value = uiState.selectedRound,
+                    onValueChange = viewModel::onRoundChange,
                     label = { Text(stringResource(R.string.round_label)) },
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -277,8 +247,8 @@ fun AdminResultsScreen() {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
-                    value = mysteryQuestion,
-                    onValueChange = { mysteryQuestion = it },
+                    value = uiState.mysteryQuestion,
+                    onValueChange = viewModel::onMysteryQuestionChange,
                     label = { Text(stringResource(R.string.admin_mystery_question)) },
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -286,8 +256,8 @@ fun AdminResultsScreen() {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
-                    value = mysteryAnswer,
-                    onValueChange = { mysteryAnswer = it.uppercase() },
+                    value = uiState.mysteryAnswer,
+                    onValueChange = viewModel::onMysteryAnswerChange,
                     label = { Text(stringResource(R.string.admin_correct_answer)) },
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -295,15 +265,7 @@ fun AdminResultsScreen() {
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Button(
-                    onClick = {
-                        scope.launch {
-                            MysteryQuestionRepository().saveMysteryQuestion(
-                                round = selectedRound,
-                                question = mysteryQuestion,
-                                answer = mysteryAnswer
-                            )
-                        }
-                    },
+                    onClick = viewModel::saveMysteryQuestion,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(stringResource(R.string.admin_save_mystery_question))

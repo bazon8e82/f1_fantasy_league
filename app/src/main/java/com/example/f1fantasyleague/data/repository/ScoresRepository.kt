@@ -3,34 +3,39 @@ package com.example.f1fantasyleague.data.repository
 import com.example.f1fantasyleague.data.scoring.PointsCalculator
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
+import com.example.f1fantasyleague.data.firestore.*
 
-class ScoresRepository(
+object ScoresRepository {
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
-) {
+
 
     suspend fun calculateAndSaveScores(
         raceWeekendId: String,
         actualQualifyingTop10: List<String>,
         actualRaceTop10: List<String>
     ) {
+        val roundDocumentId = "$DOCUMENT_ROUND_PREFIX$raceWeekendId"
+
         val predictionDocument = firestore
-            .collection("predictions")
-            .document("round$raceWeekendId")
+            .collection(COLLECTION_PREDICTIONS)
+            .document(roundDocumentId)
             .get()
             .await()
+
+        val batch = firestore.batch()
 
         predictionDocument.data?.forEach { entry ->
             val userId = entry.key
             val prediction = entry.value as? Map<*, *> ?: return@forEach
 
             val predictedQualifyingTop3 =
-                prediction["qualifyingTop3"] as? List<String> ?: emptyList()
+                prediction[FIELD_QUALIFYING_TOP_3] as? List<String> ?: emptyList()
 
             val predictedRaceTop3 =
-                prediction["raceTop3"] as? List<String> ?: emptyList()
+                prediction[FIELD_RACE_TOP_3] as? List<String> ?: emptyList()
 
             val mysteryGuessPoints =
-                (prediction["mysteryGuessPoints"] as? Long)?.toInt() ?: 0
+                (prediction[FIELD_MYSTERY_GUESS_POINTS] as? Long)?.toInt() ?: 0
 
             val qualifyingPoints = PointsCalculator.calculateQualifyingPoints(
                 predictedTop3 = predictedQualifyingTop3,
@@ -45,20 +50,22 @@ class ScoresRepository(
             val totalPoints = qualifyingPoints + racePoints + mysteryGuessPoints
 
             val score = mapOf(
-                "raceWeekendId" to raceWeekendId,
-                "qualifyingPoints" to qualifyingPoints,
-                "racePoints" to racePoints,
-                "mysteryPoints" to mysteryGuessPoints,
-                "totalPoints" to totalPoints
+                FIELD_RACE_WEEKEND_ID to raceWeekendId,
+                FIELD_QUALIFYING_POINTS to qualifyingPoints,
+                FIELD_RACE_POINTS to racePoints,
+                FIELD_MYSTERY_POINTS to mysteryGuessPoints,
+                FIELD_TOTAL_POINTS to totalPoints
             )
 
-            firestore
-                .collection("users")
+            val scoreDocumentReference = firestore
+                .collection(COLLECTION_USERS)
                 .document(userId)
-                .collection("scores")
-                .document("round$raceWeekendId")
-                .set(score)
-                .await()
+                .collection(COLLECTION_SCORES)
+                .document(roundDocumentId)
+
+            batch.set(scoreDocumentReference, score)
         }
+
+        batch.commit().await()
     }
 }
