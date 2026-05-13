@@ -8,7 +8,7 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import com.example.f1fantasyleague.ui.home.App
+import com.example.f1fantasyleague.ui.appnavigation.App
 import com.example.f1fantasyleague.ui.login.LoginScreen
 import com.example.f1fantasyleague.ui.login.LoginViewModel
 import com.example.f1fantasyleague.ui.theme.F1FantasyLeagueTheme

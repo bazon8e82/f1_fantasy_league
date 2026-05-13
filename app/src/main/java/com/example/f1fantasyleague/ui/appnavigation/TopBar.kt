@@ -1,4 +1,4 @@
-package com.example.f1fantasyleague.ui.home
+package com.example.f1fantasyleague.ui.appnavigation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
