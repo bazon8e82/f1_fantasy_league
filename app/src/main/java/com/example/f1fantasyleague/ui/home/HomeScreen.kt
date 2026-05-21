@@ -22,12 +22,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,18 +35,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.f1fantasyleague.ui.theme.*
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
+import android.widget.Toast
 import com.example.f1fantasyleague.R
-import com.example.f1fantasyleague.ui.theme.BackgroundPrimary
-import com.example.f1fantasyleague.ui.theme.BorderSubtle
-import com.example.f1fantasyleague.ui.theme.BrandPrimary
-import com.example.f1fantasyleague.ui.theme.SurfacePrimary
-import com.example.f1fantasyleague.ui.theme.SurfaceSecondary
-import com.example.f1fantasyleague.ui.theme.TextPrimary
-import com.example.f1fantasyleague.ui.theme.TextSecondary
 
 private val cardShape = RoundedCornerShape(30.dp)
 private val outerPadding = 20.dp
@@ -61,9 +56,6 @@ private val padding14 = 14.dp
 
 @Composable
 fun HomeScreen() {
-    val viewModel: HomeViewModel = viewModel()
-    val uiState by viewModel.uiState.collectAsState()
-
     var passcode by remember { mutableStateOf("") }
     val mysteryGuesses = listOf(
         listOf("1", "#"),
@@ -84,6 +76,17 @@ fun HomeScreen() {
         listOf("Marin S.", "RUS/ANT/PIA", "ANT/RUS/PIA", "25"),
         listOf("Bruno B", "RUS/ANT/PIA", "ANT/RUS/PIA", "-")
     )
+
+    val predictionViewModel: PredictionViewModel = viewModel()
+    val predictionUiState by predictionViewModel.uiState.collectAsState()
+    val context = LocalContext.current
+
+    LaunchedEffect(predictionUiState.messageResId) {
+        predictionUiState.messageResId?.let { message ->
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            predictionViewModel.clearMessage()
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -108,10 +111,7 @@ fun HomeScreen() {
                 border = BorderStroke(borderWidth, BorderSubtle),
                 elevation = CardDefaults.cardElevation(defaultElevation = padding14)
             ) {
-                SectionCard(
-                    title = uiState.currentRace?.raceName
-                        ?: stringResource(R.string.next_race)
-                )
+                SectionCard(title = stringResource(R.string.next_race))
                 Column(
                     modifier = Modifier.padding(
                         horizontal = sectionPadding,
@@ -120,50 +120,29 @@ fun HomeScreen() {
                     verticalArrangement = Arrangement.spacedBy(tableCellStartPadding),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    if (uiState.isLoading) {
-                        CircularProgressIndicator(color = BrandPrimary)
-                    } else {
-                        if (uiState.nextRaceNumber.isNotBlank()) {
-                            Text(
-                                text = uiState.nextRaceNumber,
-                                modifier = Modifier.fillMaxWidth(),
-                                color = TextPrimary,
-                                style = MaterialTheme.typography.headlineSmall,
-                                textAlign = TextAlign.Center
-                            )
-                        }
+                    Text(
+                        text = stringResource(R.string.number_of_races),
+                        modifier = Modifier.fillMaxWidth(),
+                        color = TextPrimary,
+                        style = MaterialTheme.typography.headlineSmall,
+                        textAlign = TextAlign.Center
+                    )
 
-                        if (uiState.raceDate.isNotBlank()) {
-                            Text(
-                                text = uiState.raceDate,
-                                modifier = Modifier.fillMaxWidth(),
-                                color = TextPrimary,
-                                style = MaterialTheme.typography.headlineSmall,
-                                textAlign = TextAlign.Center
-                            )
-                        }
+                    Text(
+                        text = stringResource(R.string.time_of_race),
+                        modifier = Modifier.fillMaxWidth(),
+                        color = TextPrimary,
+                        style = MaterialTheme.typography.headlineSmall,
+                        textAlign = TextAlign.Center
+                    )
 
-                        if (uiState.countdownText.isNotBlank()) {
-                            Text(
-                                text = uiState.countdownText,
-                                modifier = Modifier.fillMaxWidth(),
-                                color = TextPrimary,
-                                style = MaterialTheme.typography.headlineSmall,
-                                textAlign = TextAlign.Center,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-
-                        if (uiState.error != null) {
-                            Text(
-                                text = uiState.error ?: "",
-                                modifier = Modifier.fillMaxWidth(),
-                                color = TextPrimary,
-                                style = MaterialTheme.typography.headlineSmall,
-                                textAlign = TextAlign.Center
-                            )
-                        }
-                    }
+                    Text(
+                        text =  stringResource(R.string.time_to_race),
+                        modifier = Modifier.fillMaxWidth(),
+                        color = TextPrimary,
+                        style = MaterialTheme.typography.headlineSmall,
+                        textAlign = TextAlign.Center
+                    )
                 }
             }
 
@@ -185,30 +164,42 @@ fun HomeScreen() {
                     verticalArrangement = Arrangement.spacedBy(tableCellStartPadding),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(
-                        text = stringResource(R.string.passcode),
+                    OutlinedTextField(
+                        value = predictionUiState.qualifyingGuess,
+                        onValueChange = predictionViewModel::onQualifyingGuessChange,
                         modifier = Modifier.fillMaxWidth(),
-                        color = TextPrimary,
-                        style = MaterialTheme.typography.headlineSmall,
-                        textAlign = TextAlign.Center
+                        label = { Text(stringResource(R.string.qualifying_guess)) },
+                        placeholder = { Text(stringResource(R.string.guess_placeholder)) },
+                        singleLine = true
                     )
 
                     OutlinedTextField(
-                        value = passcode,
-                        onValueChange = { passcode = it },
+                        value = predictionUiState.raceGuess,
+                        onValueChange = predictionViewModel::onRaceGuessChange,
                         modifier = Modifier.fillMaxWidth(),
-                        singleLine = true,
-                        visualTransformation = PasswordVisualTransformation()
+                        label = { Text(stringResource(R.string.race_guess)) },
+                        placeholder = { Text(stringResource(R.string.guess_placeholder)) },
+                        singleLine = true
+                    )
+
+                    OutlinedTextField(
+                        value = predictionUiState.mysteryGuess,
+                        onValueChange = predictionViewModel::onMysteryGuessChange,
+                        modifier = Modifier.fillMaxWidth(),
+                        label = { Text(stringResource(R.string.mystery_guess)) },
+                        placeholder = { Text("VER") },
+                        singleLine = true
                     )
 
                     Button(
-                        onClick = { },
+                        onClick = predictionViewModel::submitPrediction,
+                        enabled = !predictionUiState.isLoading,
                         colors = ButtonDefaults.buttonColors(containerColor = BrandPrimary)
                     ) {
                         Text(
-                            text = stringResource(R.string.check_button),
+                            text = stringResource(R.string.submit_guess),
                             color = TextPrimary,
-                            style = MaterialTheme.typography.headlineSmall
+                            style = MaterialTheme.typography.titleMedium
                         )
                     }
                 }

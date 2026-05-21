@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.f1fantasyleague.data.RaceRepository
 import com.example.f1fantasyleague.data.models.Race
+import com.example.f1fantasyleague.data.repository.MysteryQuestionRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,9 +12,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 data class HomeUiState(
+    val mysteryQuestions: List<List<String>> = emptyList(),
     val currentRace: Race? = null,
     val nextRaceNumber: String = "",
     val raceDate: String = "",
@@ -23,18 +27,20 @@ data class HomeUiState(
 )
 
 class HomeViewModel(
-    private val raceRepository: RaceRepository = RaceRepository
+    private val raceRepository: RaceRepository = RaceRepository,
+    private val mysteryQuestionRepository: MysteryQuestionRepository = MysteryQuestionRepository()
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
+
     private var countdownJob: Job? = null
 
     init {
-        loadInitialRace()
+        loadInitialData()
     }
 
-    private fun loadInitialRace() {
+    private fun loadInitialData() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
 
@@ -51,10 +57,18 @@ class HomeViewModel(
                         nextRaceNumber = "",
                         raceDate = "",
                         countdownText = "",
-                        isLoading = false,
                         error = error.message ?: NO_UPCOMING_RACES_MESSAGE
                     )
                 }
+            }
+
+            val questions = mysteryQuestionRepository.getAllMysteryQuestions()
+
+            _uiState.update {
+                it.copy(
+                    mysteryQuestions = questions,
+                    isLoading = false
+                )
             }
         }
     }
@@ -62,7 +76,9 @@ class HomeViewModel(
     private fun loadNextRace(currentRaceDate: com.google.firebase.Timestamp?) {
         viewModelScope.launch {
             _uiState.update { it.copy(error = null) }
+
             val nextRaceResult = raceRepository.getRace(currentRaceDate)
+
             nextRaceResult.onSuccess { race ->
                 updateRaceState(race)
                 startCountdown()
@@ -143,8 +159,7 @@ class HomeViewModel(
 
     private fun formatDate(date: java.util.Date?): String {
         if (date == null) return ""
-        val dateFormat =
-            java.text.SimpleDateFormat("dd.MM.yyyy HH:mm", java.util.Locale.getDefault())
+        val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
         return dateFormat.format(date)
     }
 
