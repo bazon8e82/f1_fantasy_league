@@ -48,6 +48,45 @@ class PredictionRepository {
             .await()
     }
 
+    suspend fun getPredictionsForRound(round: String): List<List<String>> {
+        val roundDocumentId = "$DOCUMENT_ROUND_PREFIX$round"
+
+        val document = firestore
+            .collection(COLLECTION_PREDICTIONS)
+            .document(roundDocumentId)
+            .get()
+            .await()
+
+        return document.data?.mapNotNull { entry ->
+            val userId = entry.key
+            val prediction = entry.value as? Map<*, *> ?: return@mapNotNull null
+
+            val userDocument = firestore
+                .collection("users")
+                .document(userId)
+                .get()
+                .await()
+
+            val name = userDocument.getString("name") ?: "-"
+
+            val qualifyingTop3 =
+                prediction[FIELD_QUALIFYING_TOP_3] as? List<*> ?: emptyList<String>()
+
+            val raceTop3 =
+                prediction[FIELD_RACE_TOP_3] as? List<*> ?: emptyList<String>()
+
+            val mysteryGuess =
+                prediction[FIELD_MYSTERY_GUESS] as? String ?: "-"
+
+            listOf(
+                name,
+                qualifyingTop3.joinToString("/"),
+                raceTop3.joinToString("/"),
+                mysteryGuess
+            )
+        } ?: emptyList()
+    }
+
     private fun parseDriverCodes(input: String): List<String> {
         return input
             .split("/")

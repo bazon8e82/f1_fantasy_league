@@ -121,4 +121,14 @@
     <string name="admin_correct_answer">Correct Answer</string>
     <string name="admin_save_mystery_question">Save Mystery Question</string>
 
+    <string name="msg_mystery_question_saved">Mystery question saved</string>
+    <string name="msg_mystery_question_save_error">Error saving mystery question</string>
+
+    <string name="results_title_name">Overall Results</string>
+    <string name="results_title">Titles</string>
+    <string name="results_wins">Wins</string>
+    <string name="results_points">Points</string>
+    <string name="results_best">Best</string>
+    <string name="results_seasons">Seasons</string>
+
 </resources>

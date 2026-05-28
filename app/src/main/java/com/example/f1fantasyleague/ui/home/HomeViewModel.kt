@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.concurrent.TimeUnit
+import com.example.f1fantasyleague.data.repository.PredictionRepository
 
 data class HomeUiState(
     val mysteryQuestions: List<List<String>> = emptyList(),
@@ -23,12 +24,14 @@ data class HomeUiState(
     val raceDate: String = "",
     val countdownText: String = "",
     val isLoading: Boolean = true,
-    val error: String? = null
+    val error: String? = null,
+    val guessesRows: List<List<String>> = emptyList()
 )
 
 class HomeViewModel(
     private val raceRepository: RaceRepository = RaceRepository,
-    private val mysteryQuestionRepository: MysteryQuestionRepository = MysteryQuestionRepository()
+    private val mysteryQuestionRepository: MysteryQuestionRepository = MysteryQuestionRepository(),
+    private val predictionRepository: PredictionRepository = PredictionRepository()
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -63,10 +66,12 @@ class HomeViewModel(
             }
 
             val questions = mysteryQuestionRepository.getAllMysteryQuestions()
+            val guesses = predictionRepository.getPredictionsForRound("4")
 
             _uiState.update {
                 it.copy(
                     mysteryQuestions = questions,
+                    guessesRows = guesses,
                     isLoading = false
                 )
             }

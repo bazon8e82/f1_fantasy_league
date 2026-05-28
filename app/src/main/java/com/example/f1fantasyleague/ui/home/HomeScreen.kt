@@ -57,11 +57,9 @@ private val padding14 = 14.dp
 @Composable
 fun HomeScreen() {
     var passcode by remember { mutableStateOf("") }
-    val mysteryGuesses = listOf(
-        listOf("1", "#"),
-        listOf("2", "#"),
-        listOf("3", "#")
-    )
+    val homeViewModel: HomeViewModel = viewModel()
+    val homeUiState by homeViewModel.uiState.collectAsState()
+
 
     val standingsRows = listOf(
         listOf("1", "Pav", "0", "65"),
@@ -208,7 +206,7 @@ fun HomeScreen() {
             TableCard(
                 title = stringResource(R.string.mystery_guess_title),
                 header = listOf(stringResource(R.string.R), stringResource(R.string.guess)),
-                rows = mysteryGuesses
+                rows = homeUiState.mysteryQuestions
             )
 
             TableCard(
@@ -230,7 +228,7 @@ fun HomeScreen() {
                     stringResource(R.string.table_race_header),
                     stringResource(R.string.table_mystery_header)
                 ),
-                rows = guessesRows
+                rows = homeUiState.guessesRows
             )
         }
     }
