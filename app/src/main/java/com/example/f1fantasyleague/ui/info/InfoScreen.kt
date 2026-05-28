@@ -1,4 +1,4 @@
-package com.example.f1fantasyleague.ui.info
+package com.example.f1fantasyleague.ui.home
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
