@@ -65,10 +65,7 @@
     <string name="scroll_top_desc">Scroll to top</string>
     <string name="lock_icon_desc">Lock</string>
 
-    <string name="next_race">Miami Grand Prix</string>
-    <string name="number_of_races">Race 4/22</string>
-    <string name="time_of_race">02/05, 22:00</string>
-    <string name="time_to_race">11d 10h 32m 20s</string>
+    <string name="next_race">Next race</string>
 
     <string name="guess_title">Make a guess</string>
     <string name="passcode">Your Passcode</string>
@@ -120,5 +117,7 @@
     <string name="admin_mystery_question">Mystery Question</string>
     <string name="admin_correct_answer">Correct Answer</string>
     <string name="admin_save_mystery_question">Save Mystery Question</string>
+    <string name="msg_mystery_question_saved">Mystery question saved</string>
+    <string name="msg_mystery_question_save_error">Mystery question save error</string>
 
 </resources>
