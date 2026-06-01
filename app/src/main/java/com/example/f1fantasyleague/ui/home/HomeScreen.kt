@@ -78,16 +78,15 @@ fun HomeScreen() {
         listOf("4", "Bur", "0", "33")
     )
 
-    val guessesRows = listOf(
-        listOf("Luka P.", "RUS/ANT/PIA", "ANT/RUS/PIA", "-"),
-        listOf("Matej D.", "RUS/ANT/PIA", "ANT/RUS/PIA", "-"),
-        listOf("Marin S.", "RUS/ANT/PIA", "ANT/RUS/PIA", "25"),
-        listOf("Bruno B", "RUS/ANT/PIA", "ANT/RUS/PIA", "-")
-    )
-
+    val homeViewModel: HomeViewModel = viewModel()
+    val homeUiState by homeViewModel.uiState.collectAsState()
     val predictionViewModel: PredictionViewModel = viewModel()
     val predictionUiState by predictionViewModel.uiState.collectAsState()
     val context = LocalContext.current
+
+    LaunchedEffect(homeUiState.currentRace?.raceId) {
+        predictionViewModel.updateRoundId(homeUiState.currentRace?.raceId)
+    }
 
     LaunchedEffect(predictionUiState.messageResId) {
         predictionUiState.messageResId?.let { message ->
@@ -262,7 +261,7 @@ fun HomeScreen() {
                     stringResource(R.string.table_race_header),
                     stringResource(R.string.table_mystery_header)
                 ),
-                rows = guessesRows
+                rows = homeUiState.guessesRows
             )
         }
     }

@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import com.example.f1fantasyleague.R
 
 data class PredictionUiState(
-    val round: String = "6",
+    val roundId: Int? = null,
     val qualifyingGuess: String = "",
     val raceGuess: String = "",
     val mysteryGuess: String = "",
@@ -44,14 +44,19 @@ class PredictionViewModel(
         }
     }
 
+    fun updateRoundId(roundId: Int?) {
+        _uiState.update { it.copy(roundId = roundId) }
+    }
+
     fun submitPrediction() {
         val state = _uiState.value
+        val roundId = state.roundId
 
         val qualifyingTop3 = parseTop3(state.qualifyingGuess)
         val raceTop3 = parseTop3(state.raceGuess)
         val mysteryGuess = state.mysteryGuess.trim().uppercase()
 
-        if (qualifyingTop3.size != 3 || raceTop3.size != 3 || mysteryGuess.isBlank()) {
+        if (roundId == null || roundId <= 0 || qualifyingTop3.size != 3 || raceTop3.size != 3 || mysteryGuess.isBlank()) {
             _uiState.update {
                 it.copy(messageResId = R.string.msg_prediction_invalid)
             }
@@ -63,7 +68,7 @@ class PredictionViewModel(
 
             try {
                 repository.savePrediction(
-                    round = state.round,
+                    roundId = roundId,
                     qualifyingTop3Input = state.qualifyingGuess,
                     raceTop3Input = state.raceGuess,
                     mysteryGuess = mysteryGuess

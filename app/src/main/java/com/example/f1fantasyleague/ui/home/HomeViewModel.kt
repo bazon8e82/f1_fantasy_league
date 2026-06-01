@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.f1fantasyleague.data.RaceRepository
 import com.example.f1fantasyleague.data.models.Race
 import com.example.f1fantasyleague.data.repository.MysteryQuestionRepository
+import com.example.f1fantasyleague.data.repository.PredictionRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,6 +19,7 @@ import java.util.concurrent.TimeUnit
 
 data class HomeUiState(
     val mysteryQuestions: List<List<String>> = emptyList(),
+    val guessesRows: List<List<String>> = emptyList(),
     val currentRace: Race? = null,
     val nextRaceNumber: String = "",
     val raceDate: String = "",
@@ -28,7 +30,8 @@ data class HomeUiState(
 
 class HomeViewModel(
     private val raceRepository: RaceRepository = RaceRepository,
-    private val mysteryQuestionRepository: MysteryQuestionRepository = MysteryQuestionRepository()
+    private val mysteryQuestionRepository: MysteryQuestionRepository = MysteryQuestionRepository(),
+    private val predictionRepository: PredictionRepository = PredictionRepository()
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -48,6 +51,7 @@ class HomeViewModel(
             raceResult.onSuccess { race ->
                 updateRaceState(race)
                 startCountdown()
+                loadGuessesForRound(race.raceId)
             }
 
             raceResult.onFailure { error ->
@@ -79,12 +83,14 @@ class HomeViewModel(
 
             val nextRaceResult = raceRepository.getRace(currentRaceDate)
 
-            nextRaceResult.onSuccess { race ->
+            val race = nextRaceResult.getOrNull()
+
+            if (race != null) {
                 updateRaceState(race)
                 startCountdown()
-            }
-
-            nextRaceResult.onFailure { error ->
+                loadGuessesForRound(race.raceId)
+            } else {
+                val error = nextRaceResult.exceptionOrNull()
                 _uiState.update {
                     it.copy(
                         currentRace = null,
@@ -92,7 +98,7 @@ class HomeViewModel(
                         raceDate = "",
                         countdownText = "",
                         isLoading = false,
-                        error = error.message ?: NO_UPCOMING_RACES_MESSAGE
+                        error = error?.message ?: NO_UPCOMING_RACES_MESSAGE
                     )
                 }
             }
@@ -117,6 +123,27 @@ class HomeViewModel(
                 error = null
             )
         }
+    }
+
+    private suspend fun loadGuessesForRound(roundId: Int) {
+        if (roundId <= 0) {
+            _uiState.update { it.copy(guessesRows = emptyList()) }
+            return
+        }
+
+        val guesses = predictionRepository.getPredictionsForRound(roundId)
+        val rows = guesses
+            .sortedBy { it.name.lowercase() }
+            .map { guess ->
+                listOf(
+                    guess.name,
+                    formatTop3(guess.qualifyingTop3),
+                    formatTop3(guess.raceTop3),
+                    formatMysteryGuess(guess.mysteryGuess)
+                )
+            }
+
+        _uiState.update { it.copy(guessesRows = rows) }
     }
 
     private fun startCountdown() {
@@ -161,6 +188,14 @@ class HomeViewModel(
         if (date == null) return ""
         val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
         return dateFormat.format(date)
+    }
+
+    private fun formatTop3(values: List<String>): String {
+        return if (values.isEmpty()) "-" else values.joinToString("/")
+    }
+
+    private fun formatMysteryGuess(value: String): String {
+        return value.ifBlank { "-" }
     }
 
     companion object {
