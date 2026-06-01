@@ -4,6 +4,7 @@ import com.example.f1fantasyleague.data.firestore.COLLECTION_USERS
 import com.example.f1fantasyleague.data.firestore.FIELD_EMAIL
 import com.example.f1fantasyleague.data.firestore.FIELD_NAME
 import com.example.f1fantasyleague.data.firestore.FIELD_POINTS
+import com.example.f1fantasyleague.data.firestore.FIELD_WINS
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.channels.awaitClose
@@ -45,7 +46,8 @@ class AuthRepository(
             val user = mapOf(
                 FIELD_NAME to name.trim(),
                 FIELD_EMAIL to email.trim(),
-                FIELD_POINTS to 0
+                FIELD_POINTS to 0,
+                FIELD_WINS to 0
             )
 
             db.collection(COLLECTION_USERS)

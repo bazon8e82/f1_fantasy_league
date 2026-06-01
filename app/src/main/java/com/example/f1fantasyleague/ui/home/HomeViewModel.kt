@@ -3,6 +3,7 @@ package com.example.f1fantasyleague.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.f1fantasyleague.data.RaceRepository
+import com.example.f1fantasyleague.data.StandingsRepository
 import com.example.f1fantasyleague.data.models.Race
 import com.example.f1fantasyleague.data.repository.MysteryQuestionRepository
 import kotlinx.coroutines.Job
@@ -22,13 +23,15 @@ data class HomeUiState(
     val nextRaceNumber: String = "",
     val raceDate: String = "",
     val countdownText: String = "",
+    val standingsRows: List<List<String>> = emptyList(),
     val isLoading: Boolean = true,
     val error: String? = null
 )
 
 class HomeViewModel(
     private val raceRepository: RaceRepository = RaceRepository,
-    private val mysteryQuestionRepository: MysteryQuestionRepository = MysteryQuestionRepository()
+    private val mysteryQuestionRepository: MysteryQuestionRepository = MysteryQuestionRepository(),
+    private val standingsRepository: StandingsRepository = StandingsRepository()
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -38,6 +41,26 @@ class HomeViewModel(
 
     init {
         loadInitialData()
+        observeStandings()
+    }
+
+    private fun observeStandings() {
+        viewModelScope.launch {
+            standingsRepository.observeStandings().collect { users ->
+                val rows = users
+                    .sortedByDescending { it.points }
+                    .mapIndexed { index, user ->
+                        listOf(
+                            (index + 1).toString(),
+                            user.name,
+                            user.points.toString(),
+                            user.wins.toString()
+                        )
+                    }
+
+                _uiState.update { it.copy(standingsRows = rows) }
+            }
+        }
     }
 
     private fun loadInitialData() {

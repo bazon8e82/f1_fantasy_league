@@ -1,5 +1,6 @@
 package com.example.f1fantasyleague.ui.home
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -26,24 +27,21 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.f1fantasyleague.R
@@ -65,18 +63,9 @@ private val tableDividerVerticalPadding = 2.dp
 private val padding14 = 14.dp
 
 @Composable
-fun HomeScreen() {
-    val viewModel: HomeViewModel = viewModel()
-    val uiState by viewModel.uiState.collectAsState()
-
+fun HomeScreen(homeViewModel: HomeViewModel) {
+    val uiState by homeViewModel.uiState.collectAsState()
     val mysteryGuesses = uiState.mysteryQuestions
-
-    val standingsRows = listOf(
-        listOf("1", "Pav", "0", "65"),
-        listOf("2", "Dud", "0", "39"),
-        listOf("3", "Sro", "0", "36"),
-        listOf("4", "Bur", "0", "33")
-    )
 
     val guessesRows = listOf(
         listOf("Luka P.", "RUS/ANT/PIA", "ANT/RUS/PIA", "-"),
@@ -248,10 +237,10 @@ fun HomeScreen() {
                 header = listOf(
                     stringResource(R.string.table_rank_header),
                     stringResource(R.string.table_name_header),
-                    stringResource(R.string.table_wins_header),
-                    stringResource(R.string.table_points_header)
+                    stringResource(R.string.table_points_header),
+                    stringResource(R.string.table_wins_header)
                 ),
-                rows = standingsRows
+                rows = uiState.standingsRows
             )
 
             TableCard(
@@ -276,25 +265,30 @@ fun TableCard(
 ) {
     val textMeasurer = rememberTextMeasurer()
     val density = LocalDensity.current
-    val headerStyle = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
-    val bodyStyle = MaterialTheme.typography.headlineSmall
-    val columnWidths = header.indices.map { columnIndex ->
-        val headerWidth = textMeasurer
-            .measure(text = AnnotatedString(header[columnIndex]), style = headerStyle)
-            .size
-            .width
+    val headerTextStyle = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
+    val rowTextStyle = MaterialTheme.typography.headlineSmall
+    val columnCount = maxOf(header.size, rows.maxOfOrNull { it.size } ?: 0)
+    val columnWidths = remember(header, rows, density, headerTextStyle, rowTextStyle) {
+        List(columnCount) { index ->
+            val headerWidth = header.getOrNull(index)?.let { column ->
+                textMeasurer
+                    .measure(text = AnnotatedString(column), style = headerTextStyle)
+                    .size
+                    .width
+            } ?: 0
 
-        val rowsWidth = rows.maxOfOrNull { row ->
-            textMeasurer
-                .measure(
-                    text = AnnotatedString(row.getOrNull(columnIndex).orEmpty()),
-                    style = bodyStyle
-                )
-                .size
-                .width
-        } ?: 0
+            val rowWidth = rows.maxOfOrNull { row ->
+                textMeasurer
+                    .measure(
+                        text = AnnotatedString(row.getOrNull(index).orEmpty()),
+                        style = rowTextStyle
+                    )
+                    .size
+                    .width
+            } ?: 0
 
-        with(density) { maxOf(headerWidth, rowsWidth).toDp() } + tableCellStartPadding * 2
+            with(density) { maxOf(headerWidth, rowWidth).toDp() } + tableCellStartPadding * 2
+        }
     }
 
     Card(
@@ -335,9 +329,8 @@ fun TableCard(
                                     vertical = tableCellVerticalPadding
                                 ),
                             color = TextPrimary,
-                            style = MaterialTheme.typography.headlineSmall,
-                            textAlign = TextAlign.Center,
-                            fontWeight = FontWeight.Bold
+                            style = headerTextStyle,
+                            textAlign = TextAlign.Center
                         )
                         if (index < header.lastIndex) {
                             Box(
@@ -369,7 +362,7 @@ fun TableCard(
                                         vertical = tableCellVerticalPadding
                                     ),
                                 color = TextSecondary,
-                                style = MaterialTheme.typography.headlineSmall,
+                                style = rowTextStyle,
                                 textAlign = TextAlign.Center
                             )
                             if (index < row.lastIndex) {
