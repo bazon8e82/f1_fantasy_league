@@ -17,6 +17,7 @@ import com.example.f1fantasyleague.ui.home.HomeScreen
 import com.example.f1fantasyleague.ui.info.InfoScreenContent
 import com.example.f1fantasyleague.ui.theme.*
 import com.example.f1fantasyleague.ui.admin.AdminResultsScreen
+import com.example.f1fantasyleague.ui.results.ResultsScreen
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
@@ -67,7 +68,7 @@ fun App(
                 "home" -> HomeScreen()
                 "info" -> InfoScreenContent()
                 "standings" -> ScreenPlaceholder("Standings")
-                "results" -> ScreenPlaceholder("Results")
+                "results" -> ResultsScreen()
                 "hotlaps" -> ScreenPlaceholder("Hotlaps")
                 "admin" -> AdminResultsScreen()
             }

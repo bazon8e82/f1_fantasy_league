@@ -1,9 +1,11 @@
 package com.example.f1fantasyleague.data.repository
 
 import com.example.f1fantasyleague.data.firestore.COLLECTION_PREDICTIONS
+import com.example.f1fantasyleague.data.firestore.COLLECTION_USERS
 import com.example.f1fantasyleague.data.firestore.DOCUMENT_ROUND_PREFIX
 import com.example.f1fantasyleague.data.firestore.FIELD_EMAIL
 import com.example.f1fantasyleague.data.firestore.FIELD_MYSTERY_GUESS
+import com.example.f1fantasyleague.data.firestore.FIELD_NAME
 import com.example.f1fantasyleague.data.firestore.FIELD_QUALIFYING_TOP_3
 import com.example.f1fantasyleague.data.firestore.FIELD_RACE_TOP_3
 import com.google.firebase.Timestamp
@@ -29,6 +31,17 @@ class PredictionRepository {
 
         val roundDocumentId = "$DOCUMENT_ROUND_PREFIX$round"
 
+        val existingPrediction = firestore
+            .collection(COLLECTION_PREDICTIONS)
+            .document(roundDocumentId)
+            .get()
+            .await()
+
+        if (existingPrediction.data?.containsKey(user.uid) == true) {
+            throw IllegalStateException("Prediction already submitted for this round")
+        }
+
+
         val data = hashMapOf(
             FIELD_EMAIL to user.email,
             FIELD_QUALIFYING_TOP_3 to qualifyingTop3,
@@ -46,6 +59,45 @@ class PredictionRepository {
                 com.google.firebase.firestore.SetOptions.merge()
             )
             .await()
+    }
+
+    suspend fun getPredictionsForRound(round: String): List<List<String>> {
+        val roundDocumentId = "$DOCUMENT_ROUND_PREFIX$round"
+
+        val document = firestore
+            .collection(COLLECTION_PREDICTIONS)
+            .document(roundDocumentId)
+            .get()
+            .await()
+
+        return document.data?.mapNotNull { entry ->
+            val userId = entry.key
+            val prediction = entry.value as? Map<*, *> ?: return@mapNotNull null
+
+            val userDocument = firestore
+                .collection(COLLECTION_USERS)
+                .document(userId)
+                .get()
+                .await()
+
+            val name = userDocument.getString(FIELD_NAME) ?: "-"
+
+            val qualifyingTop3 =
+                prediction[FIELD_QUALIFYING_TOP_3] as? List<*> ?: emptyList<String>()
+
+            val raceTop3 =
+                prediction[FIELD_RACE_TOP_3] as? List<*> ?: emptyList<String>()
+
+            val mysteryGuess =
+                prediction[FIELD_MYSTERY_GUESS] as? String ?: "-"
+
+            listOf(
+                name,
+                qualifyingTop3.joinToString("/"),
+                raceTop3.joinToString("/"),
+                mysteryGuess
+            )
+        } ?: emptyList()
     }
 
     private fun parseDriverCodes(input: String): List<String> {
