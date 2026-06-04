@@ -67,5 +67,119 @@ object ScoresRepository {
         }
 
         batch.commit().await()
+
+        predictionDocument.data?.keys?.forEach { userId ->
+            updateUserTotalPoints(userId)
+        }
+
+        updateUserWins()
+
+        updateUserTitles()
     }
+
+    private suspend fun updateUserTotalPoints(userId: String) {
+        val scoresSnapshot = firestore
+            .collection(COLLECTION_USERS)
+            .document(userId)
+            .collection(COLLECTION_SCORES)
+            .get()
+            .await()
+
+        val totalPoints = scoresSnapshot.documents.sumOf { document ->
+            document.getLong(FIELD_TOTAL_POINTS)?.toInt() ?: 0
+        }
+
+        firestore
+            .collection(COLLECTION_USERS)
+            .document(userId)
+            .update(FIELD_POINTS, totalPoints)
+            .await()
+    }
+
+    private suspend fun updateUserWins() {
+        val usersSnapshot = firestore
+            .collection(COLLECTION_USERS)
+            .get()
+            .await()
+
+        val userWins = usersSnapshot.documents.associate { document ->
+            document.id to 0
+        }.toMutableMap()
+
+        val allRoundIds = usersSnapshot.documents
+            .flatMap { document ->
+                firestore
+                    .collection(COLLECTION_USERS)
+                    .document(document.id)
+                    .collection(COLLECTION_SCORES)
+                    .get()
+                    .await()
+                    .documents
+                    .map { it.id }
+            }
+            .distinct()
+
+        allRoundIds.forEach { roundId ->
+            val roundScores = usersSnapshot.documents.mapNotNull { userDocument ->
+                val scoreDocument = firestore
+                    .collection(COLLECTION_USERS)
+                    .document(userDocument.id)
+                    .collection(COLLECTION_SCORES)
+                    .document(roundId)
+                    .get()
+                    .await()
+
+                val totalPoints = scoreDocument.getLong(FIELD_TOTAL_POINTS)?.toInt()
+                    ?: return@mapNotNull null
+
+                userDocument.id to totalPoints
+
+            }
+
+            val maxPoints = roundScores.maxOfOrNull { it.second } ?: return@forEach
+
+            roundScores
+                .filter { it.second == maxPoints }
+                .forEach { winner ->
+                    userWins[winner.first] = (userWins[winner.first] ?: 0) + 1
+                }
+        }
+
+        usersSnapshot.documents.forEach { userDocument ->
+            firestore
+                .collection(COLLECTION_USERS)
+                .document(userDocument.id)
+                .update(FIELD_WINS, userWins[userDocument.id] ?: 0)
+                .await()
+        }
+    }
+
+    private suspend fun updateUserTitles() {
+        val usersSnapshot = firestore
+            .collection(COLLECTION_USERS)
+            .get()
+            .await()
+
+        val usersWithPoints = usersSnapshot.documents.map { document ->
+            document.id to (document.getLong(FIELD_POINTS)?.toInt() ?: 0)
+        }
+
+        val maxPoints = usersWithPoints.maxOfOrNull { it.second } ?: return
+
+        usersWithPoints.forEach { user ->
+            val titles = if (user.second == maxPoints && maxPoints > 0) {
+                1
+            } else {
+                0
+            }
+
+            firestore
+                .collection(COLLECTION_USERS)
+                .document(user.first)
+                .update(FIELD_TITLES, titles)
+                .await()
+        }
+    }
+
+
 }

@@ -1,9 +1,11 @@
 package com.example.f1fantasyleague.data.repository
 
 import com.example.f1fantasyleague.data.firestore.COLLECTION_PREDICTIONS
+import com.example.f1fantasyleague.data.firestore.COLLECTION_USERS
 import com.example.f1fantasyleague.data.firestore.DOCUMENT_ROUND_PREFIX
 import com.example.f1fantasyleague.data.firestore.FIELD_EMAIL
 import com.example.f1fantasyleague.data.firestore.FIELD_MYSTERY_GUESS
+import com.example.f1fantasyleague.data.firestore.FIELD_NAME
 import com.example.f1fantasyleague.data.firestore.FIELD_QUALIFYING_TOP_3
 import com.example.f1fantasyleague.data.firestore.FIELD_RACE_TOP_3
 import com.google.firebase.Timestamp
@@ -28,6 +30,17 @@ class PredictionRepository {
         val raceTop3 = parseDriverCodes(raceTop3Input)
 
         val roundDocumentId = "$DOCUMENT_ROUND_PREFIX$round"
+
+        val existingPrediction = firestore
+            .collection(COLLECTION_PREDICTIONS)
+            .document(roundDocumentId)
+            .get()
+            .await()
+
+        if (existingPrediction.data?.containsKey(user.uid) == true) {
+            throw IllegalStateException("Prediction already submitted for this round")
+        }
+
 
         val data = hashMapOf(
             FIELD_EMAIL to user.email,
@@ -62,12 +75,12 @@ class PredictionRepository {
             val prediction = entry.value as? Map<*, *> ?: return@mapNotNull null
 
             val userDocument = firestore
-                .collection("users")
+                .collection(COLLECTION_USERS)
                 .document(userId)
                 .get()
                 .await()
 
-            val name = userDocument.getString("name") ?: "-"
+            val name = userDocument.getString(FIELD_NAME) ?: "-"
 
             val qualifyingTop3 =
                 prediction[FIELD_QUALIFYING_TOP_3] as? List<*> ?: emptyList<String>()

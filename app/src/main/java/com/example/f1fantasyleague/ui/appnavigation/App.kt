@@ -1,4 +1,4 @@
-package com.example.f1fantasyleague.ui.home
+package com.example.f1fantasyleague.ui.appnavigation
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -14,11 +14,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.f1fantasyleague.ui.home.HomeScreen
+import com.example.f1fantasyleague.ui.info.InfoScreenContent
 import com.example.f1fantasyleague.ui.theme.*
 import com.example.f1fantasyleague.ui.admin.AdminResultsScreen
-import com.google.firebase.auth.FirebaseAuth
 import com.example.f1fantasyleague.ui.results.ResultsScreen
-import com.example.f1fantasyleague.ui.info.InfoScreen
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun App(
@@ -66,7 +66,7 @@ fun App(
         ) {
             when (currentScreen) {
                 "home" -> HomeScreen()
-                "info" -> InfoScreen()
+                "info" -> InfoScreenContent()
                 "standings" -> ScreenPlaceholder("Standings")
                 "results" -> ResultsScreen()
                 "hotlaps" -> ScreenPlaceholder("Hotlaps")

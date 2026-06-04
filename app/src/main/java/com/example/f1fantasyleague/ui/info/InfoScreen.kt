@@ -1,4 +1,4 @@
-package com.example.f1fantasyleague.ui.home
+package com.example.f1fantasyleague.ui.info
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -24,19 +24,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.f1fantasyleague.R
-import com.example.f1fantasyleague.ui.theme.*
 import com.example.f1fantasyleague.ui.home.SectionCard
+import com.example.f1fantasyleague.ui.theme.*
 
 private val cardShape = RoundedCornerShape(30.dp)
 private val outerPadding = 20.dp
 private val sectionPadding = 24.dp
 private val borderWidth = 1.dp
 private val padding14 = 14.dp
-
-@Composable
-fun InfoScreen() {
-    InfoScreenContent()
-}
 
 @Composable
 fun InfoScreenContent() {

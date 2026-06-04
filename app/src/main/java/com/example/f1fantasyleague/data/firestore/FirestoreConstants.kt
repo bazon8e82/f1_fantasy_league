@@ -12,6 +12,10 @@ const val FIELD_NAME = "name"
 const val FIELD_POINTS = "points"
 const val FIELD_MYSTERY_GUESS = "mysteryGuess"
 
+const val FIELD_WINS = "wins"
+
+const val FIELD_TITLES = "titles"
+
 
 const val DOCUMENT_ROUND_PREFIX = "round"
 
