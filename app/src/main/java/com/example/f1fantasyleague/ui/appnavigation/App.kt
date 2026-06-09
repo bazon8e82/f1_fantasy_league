@@ -17,6 +17,7 @@ import com.example.f1fantasyleague.ui.home.HomeScreen
 import com.example.f1fantasyleague.ui.info.InfoScreenContent
 import com.example.f1fantasyleague.ui.theme.*
 import com.example.f1fantasyleague.ui.admin.AdminResultsScreen
+import com.example.f1fantasyleague.ui.hotlaps.HotlapsScreen
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
@@ -61,14 +62,14 @@ fun App(
             modifier = Modifier
                 .fillMaxSize()
                 .background(BackgroundPrimary)
-                .padding(if (currentScreen == "home") 0.dp else 24.dp)
+                .padding(0.dp )
         ) {
             when (currentScreen) {
                 "home" -> HomeScreen()
                 "info" -> InfoScreenContent()
                 "standings" -> ScreenPlaceholder("Standings")
                 "results" -> ScreenPlaceholder("Results")
-                "hotlaps" -> ScreenPlaceholder("Hotlaps")
+                "hotlaps" -> HotlapsScreen()
                 "admin" -> AdminResultsScreen()
             }
         }

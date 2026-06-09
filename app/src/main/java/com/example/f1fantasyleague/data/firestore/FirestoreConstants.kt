@@ -6,6 +6,7 @@ const val COLLECTION_SCORES = "scores"
 const val COLLECTION_PREDICTIONS = "predictions"
 const val COLLECTION_RACE_RESULTS = "raceResults"
 const val COLLECTION_MYSTERY_QUESTIONS = "mysteryQuestions"
+const val COLLECTION_HOTLAPS = "hotlaps"
 
 const val FIELD_EMAIL = "email"
 const val FIELD_NAME = "name"
@@ -36,3 +37,7 @@ const val FIELD_TOTAL_POINTS = "totalPoints"
 
 const val FIELD_QUESTION = "question"
 const val FIELD_ANSWER = "answer"
+
+const val IS_HOST = "isHost"
+const val LAP_TIME = "lapTime"
+const val USER = "user"
