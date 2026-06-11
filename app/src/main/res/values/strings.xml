@@ -128,5 +128,11 @@
     <string name="profile_titles">Titles</string>
     <string name="error_user_not_logged_in">User is not logged in.</string>
     <string name="error_loading_profile">Failed to load profile.</string>
+    <string name="profile_best_weekend">Best weekend score</string>
+    <string name="error_updating_name">Failed to update name.</string>
+    <string name="edit_name">Edit name</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="choose_avatar">Choose avatar:</string>
 
 </resources>
