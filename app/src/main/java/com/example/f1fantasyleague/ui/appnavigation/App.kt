@@ -18,6 +18,7 @@ import com.example.f1fantasyleague.ui.info.InfoScreenContent
 import com.example.f1fantasyleague.ui.theme.*
 import com.example.f1fantasyleague.ui.admin.AdminResultsScreen
 import com.google.firebase.auth.FirebaseAuth
+import com.example.f1fantasyleague.ui.profile.ProfileScreen
 
 @Composable
 fun App(
@@ -66,6 +67,7 @@ fun App(
             when (currentScreen) {
                 "home" -> HomeScreen()
                 "info" -> InfoScreenContent()
+                "profile" -> ProfileScreen()
                 "standings" -> ScreenPlaceholder("Standings")
                 "results" -> ScreenPlaceholder("Results")
                 "hotlaps" -> ScreenPlaceholder("Hotlaps")
