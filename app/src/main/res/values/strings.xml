@@ -28,6 +28,7 @@
     <string name="menu_results">Results</string>
     <string name="menu_hotlaps">Hotlaps</string>
     <string name="menu_logout">Logout</string>
+    <string name="menu_profile">Profile</string>
 
     <string name="screen_home">Home screen</string>
 
@@ -119,5 +120,13 @@
     <string name="admin_save_mystery_question">Save Mystery Question</string>
     <string name="msg_mystery_question_saved">Mystery question saved</string>
     <string name="msg_mystery_question_save_error">Mystery question save error</string>
+
+    <string name="profile_title">Profile</string>
+    <string name="profile_unknown_user">Unknown user</string>
+    <string name="profile_total_points">Total points</string>
+    <string name="profile_weekend_wins">Weekend wins</string>
+    <string name="profile_titles">Titles</string>
+    <string name="error_user_not_logged_in">User is not logged in.</string>
+    <string name="error_loading_profile">Failed to load profile.</string>
 
 </resources>

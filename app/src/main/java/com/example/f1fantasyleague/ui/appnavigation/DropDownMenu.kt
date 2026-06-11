@@ -53,6 +53,14 @@ fun DropDownMenu(
         Spacer(modifier = Modifier.height(spacerPadding))
 
         MenuItem(
+            title = stringResource(R.string.menu_profile),
+            isSelected = currentScreen == "profile",
+            onClick = { onItemClick("profile") }
+        )
+
+        Spacer(modifier = Modifier.height(spacerPadding))
+
+        MenuItem(
             title = stringResource(R.string.menu_standings),
             isSelected = currentScreen == "standings",
             onClick = { onItemClick("standings") }
