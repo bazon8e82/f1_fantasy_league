@@ -12,16 +12,22 @@ import com.example.f1fantasyleague.ui.appnavigation.App
 import com.example.f1fantasyleague.ui.login.LoginScreen
 import com.example.f1fantasyleague.ui.login.LoginViewModel
 import com.example.f1fantasyleague.ui.theme.F1FantasyLeagueTheme
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
-import android.util.Log
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 
 class MainActivity : ComponentActivity() {
 
     private val loginViewModel: LoginViewModel by viewModels()
 
+    private val requestNotificationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestNotificationPermissionIfNeeded()
 
         setContent {
             F1FantasyLeagueTheme {
@@ -56,6 +62,21 @@ class MainActivity : ComponentActivity() {
                         onSignUpClick = loginViewModel::signUp
                     )
                 }
+            }
+        }
+    }
+
+    private fun requestNotificationPermissionIfNeeded() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val hasPermission = ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+
+            if (!hasPermission) {
+                requestNotificationPermissionLauncher.launch(
+                    Manifest.permission.POST_NOTIFICATIONS
+                )
             }
         }
     }

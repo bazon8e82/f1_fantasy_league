@@ -135,4 +135,14 @@
     <string name="cancel">Cancel</string>
     <string name="choose_avatar">Choose avatar:</string>
 
+    <string name="notification_title_24h">F1 Fantasy Reminder</string>
+    <string name="notification_message_24h">
+    Predictions close in 24 hours. Submit your picks now!
+</string>
+
+    <string name="notification_title_1h">Last Chance!</string>
+    <string name="notification_message_1h">
+    Predictions close in 1 hour. Make your final picks.
+</string>
+
 </resources>

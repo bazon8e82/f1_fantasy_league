@@ -31,9 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import com.example.f1fantasyleague.notifications.NotificationScheduler
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -88,6 +86,22 @@ fun HomeScreen() {
     val predictionViewModel: PredictionViewModel = viewModel()
     val predictionUiState by predictionViewModel.uiState.collectAsState()
     val context = LocalContext.current
+
+    LaunchedEffect(
+        uiState.currentRace,
+        uiState.notificationsScheduledRaceId
+    ) {
+        val race = uiState.currentRace ?: return@LaunchedEffect
+
+        if (uiState.notificationsScheduledRaceId != race.raceId) {
+            NotificationScheduler.scheduleRaceNotifications(
+                context = context,
+                race = race
+            )
+
+            viewModel.markNotificationsScheduled(race.raceId)
+        }
+    }
 
     LaunchedEffect(predictionUiState.messageResId) {
         predictionUiState.messageResId?.let { message ->
