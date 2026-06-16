@@ -20,7 +20,7 @@ data class PredictionUiState(
 )
 
 class PredictionViewModel(
-    private val repository: PredictionRepository = PredictionRepository()
+    private val repository: PredictionRepository = PredictionRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PredictionUiState())

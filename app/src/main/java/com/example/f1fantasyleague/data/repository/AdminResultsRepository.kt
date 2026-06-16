@@ -10,9 +10,11 @@ import com.example.f1fantasyleague.data.firestore.FIELD_RACE_NAME
 import com.example.f1fantasyleague.data.firestore.FIELD_RACE_TOP_10
 import com.example.f1fantasyleague.data.firestore.FIELD_ROUND
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.Timestamp
 import kotlinx.coroutines.tasks.await
+import java.lang.Integer.parseInt
 
-class AdminResultsRepository {
+object AdminResultsRepository {
 
     private val firestore = FirebaseFirestore.getInstance()
 
@@ -24,7 +26,7 @@ class AdminResultsRepository {
         val roundDocumentId = "$DOCUMENT_ROUND_PREFIX$round"
 
         val data = hashMapOf(
-            FIELD_ROUND to round,
+            FIELD_ROUND to parseInt(round),
             FIELD_QUALIFYING_TOP_10 to qualifyingTop10,
             FIELD_RACE_TOP_10 to raceTop10,
         )
@@ -45,12 +47,12 @@ class AdminResultsRepository {
     suspend fun saveRace(
         round: String,
         raceName: String,
-        raceDate: String
+        raceDate: Timestamp?
     ) {
         val roundDocumentId = "$DOCUMENT_ROUND_PREFIX$round"
 
         val data = hashMapOf(
-            FIELD_RACE_ID to round,
+            FIELD_RACE_ID to parseInt(round),
             FIELD_RACE_NAME to raceName,
             FIELD_RACE_DATE to raceDate
         )

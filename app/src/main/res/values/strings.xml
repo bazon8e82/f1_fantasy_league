@@ -120,6 +120,16 @@
     <string name="admin_save_mystery_question">Save Mystery Question</string>
     <string name="msg_mystery_question_saved">Mystery question saved</string>
     <string name="msg_mystery_question_save_error">Mystery question save error</string>
+    <string name="admin_hotlaps">Hotlaps</string>
+    <string name="admin_save_hotlap">Save hotlap</string>
+    <string name="msg_hotlap_saved">Hotlap saved</string>
+    <string name="msg_hotlap_save_error">Error saving hotlap</string>
+    <string name="msg_hotlap_no_track">Enter a race track</string>
+    <string name="msg_hotlap_no_user">Select a user</string>
+    <string name="msg_hotlap_no_time">Enter a lap time</string>
+    <string name="admin_hotlap_time">Lap time</string>
+    <string name="msg_load_users_error">Error loading users</string>
+    <string name="admin_race_track">Race track</string>
 
     <string name="profile_title">Profile</string>
     <string name="profile_unknown_user">Unknown user</string>

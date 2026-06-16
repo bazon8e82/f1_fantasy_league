@@ -84,6 +84,7 @@ fun InfoScreenContent() {
         ) {
             Card(
                 modifier = Modifier
+                    .padding(horizontal = outerPadding)
                     .fillMaxWidth(),
                 shape = cardShape,
                 colors = CardDefaults.cardColors(containerColor = SurfacePrimary),

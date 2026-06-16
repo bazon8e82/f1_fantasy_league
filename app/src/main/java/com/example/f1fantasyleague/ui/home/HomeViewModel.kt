@@ -28,7 +28,7 @@ data class HomeUiState(
 
 class HomeViewModel(
     private val raceRepository: RaceRepository = RaceRepository,
-    private val mysteryQuestionRepository: MysteryQuestionRepository = MysteryQuestionRepository()
+    private val mysteryQuestionRepository: MysteryQuestionRepository = MysteryQuestionRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
