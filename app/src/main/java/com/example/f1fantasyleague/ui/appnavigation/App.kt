@@ -17,11 +17,13 @@ import com.example.f1fantasyleague.ui.home.HomeScreen
 import com.example.f1fantasyleague.ui.info.InfoScreenContent
 import com.example.f1fantasyleague.ui.theme.*
 import com.example.f1fantasyleague.ui.admin.AdminResultsScreen
+import com.example.f1fantasyleague.ui.home.HomeViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.example.f1fantasyleague.ui.profile.ProfileScreen
 
 @Composable
 fun App(
+    homeViewModel: HomeViewModel,
     onLogout: () -> Unit
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
@@ -65,7 +67,7 @@ fun App(
                 .padding(if (currentScreen == "home") 0.dp else 24.dp)
         ) {
             when (currentScreen) {
-                "home" -> HomeScreen()
+                "home" -> HomeScreen(homeViewModel = homeViewModel)
                 "info" -> InfoScreenContent()
                 "profile" -> ProfileScreen()
                 "standings" -> ScreenPlaceholder("Standings")
