@@ -23,7 +23,8 @@ data class HomeUiState(
     val raceDate: String = "",
     val countdownText: String = "",
     val isLoading: Boolean = true,
-    val error: String? = null
+    val error: String? = null,
+    val notificationsScheduledRaceId: Int? = null
 )
 
 class HomeViewModel(
@@ -161,6 +162,12 @@ class HomeViewModel(
         if (date == null) return ""
         val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
         return dateFormat.format(date)
+    }
+
+    fun markNotificationsScheduled(raceId: Int) {
+        _uiState.update {
+            it.copy(notificationsScheduledRaceId = raceId)
+        }
     }
 
     companion object {
