@@ -1,4 +1,4 @@
-package com.example.f1fantasyleague.ui.appnavigation
+package com.example.f1fantasyleague.ui.home
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -13,10 +13,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.f1fantasyleague.ui.home.HomeScreen
-import com.example.f1fantasyleague.ui.info.InfoScreenContent
 import com.example.f1fantasyleague.ui.theme.*
 import com.example.f1fantasyleague.ui.admin.AdminResultsScreen
+import com.example.f1fantasyleague.ui.appnavigation.DropDownMenu
+import com.example.f1fantasyleague.ui.appnavigation.TopBar
 import com.google.firebase.auth.FirebaseAuth
 import com.example.f1fantasyleague.ui.profile.ProfileScreen
 
